@@ -1,0 +1,24 @@
+{
+  "name": "naspk-legal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "NASPK Legal & Privacy Center - per-app legal documents for NASPK UGOS Pro apps",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build && node scripts/emit-static-pages.mjs",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "vue": "^3.5.29",
+    "vue-i18n": "^11.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@vitejs/plugin-vue": "^6.0.4",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vue-tsc": "^3.2.5"
+  }
+}
