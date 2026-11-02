@@ -98,7 +98,9 @@ example the bundled Xunlei engine — is added conditionally inside the template
 ### Adding an app
 
 1. Append the app to [`src/i18n/docs/apps.ts`](src/i18n/docs/apps.ts) with a
-   `slug` matching its directory name.
+   `slug` matching its directory name, and add its icon to `src/assets/apps/`
+   (128 × 128 PNG, copied from the app project) so the home list shows the real
+   logo.
 2. If it needs provider-specific wording, branch inside the templates in
    `src/i18n/docs/{zh-CN,en-US}.ts`.
 3. Add the slug to the `apps` array in `scripts/emit-static-pages.mjs` so alias

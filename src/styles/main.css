@@ -516,16 +516,13 @@ svg {
 }
 
 .app-mark {
-  display: grid;
-  place-items: center;
+  display: block;
   width: 50px;
   height: 50px;
   border-radius: 14px;
-  background: linear-gradient(140deg, var(--brand), var(--brand-2));
-  color: #fff;
-  font-weight: 800;
-  font-size: 1.15rem;
-  box-shadow: 0 10px 22px -12px rgba(79, 70, 229, 0.85);
+  object-fit: contain;
+  background: var(--surface-2);
+  box-shadow: 0 10px 22px -14px rgba(15, 23, 42, 0.35);
 }
 
 .app-body {

@@ -31,8 +31,6 @@ const nameOf = (app: (typeof apps)[number]): string =>
 const providerOf = (app: (typeof apps)[number]): string =>
   props.locale === 'en-US' ? app.provider.en : app.provider.zh
 
-const markOf = (app: (typeof apps)[number]): string => nameOf(app).slice(0, 1)
-
 const docsCount = apps.length * 4
 </script>
 
@@ -86,7 +84,15 @@ const docsCount = apps.length * 4
           class="app-card"
           :href="docPath(app.slug, 'index', locale)"
         >
-          <span class="app-mark">{{ markOf(app) }}</span>
+          <img
+            class="app-mark"
+            :src="app.icon"
+            :alt="nameOf(app)"
+            width="50"
+            height="50"
+            loading="lazy"
+            decoding="async"
+          />
           <span class="app-body">
             <span class="app-name">{{ nameOf(app) }}</span>
             <span class="app-id mono">{{ app.id }}</span>
