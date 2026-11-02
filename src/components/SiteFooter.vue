@@ -15,7 +15,7 @@ const homeHref = computed(() => homePath(props.locale))
   <footer class="site-footer">
     <div class="wrap footer-grid">
       <div class="footer-brand">
-        <span class="brand-mark small">N</span>
+        <img class="brand-mark small" src="/favicon.svg" alt="NASPK" width="32" height="32" />
         <div>
           <strong>NASPK</strong>
           <p>{{ t('footer.developer') }}：尘墨成</p>

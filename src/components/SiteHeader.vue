@@ -32,7 +32,7 @@ const themeTitle = computed(() => t(`theme.${themeMode.value}`))
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="brand" :href="homeHref">
-        <span class="brand-mark">N</span>
+        <img class="brand-mark" src="/favicon.svg" alt="NASPK" width="38" height="38" />
         <span class="brand-text">
           <strong>NASPK</strong>
           <small>{{ t('site.brand') }}</small>
