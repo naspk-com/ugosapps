@@ -32,7 +32,7 @@ const homeHref = computed(() => homePath(props.locale))
       </div>
       <div class="footer-note">
         <p>{{ t('footer.note') }}</p>
-        <p class="mono">legal.naspk.com</p>
+        <p class="mono">ugosapps.naspk.com</p>
       </div>
     </div>
   </footer>

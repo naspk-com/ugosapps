@@ -1,6 +1,6 @@
 # NASPK Legal & Privacy Center
 
-Source of <https://legal.naspk.com> — the compliance center for NASPK's UGOS Pro
+Source of <https://ugosapps.naspk.com> — the compliance center for NASPK's UGOS Pro
 cloud-drive apps. Every app keeps its own document directory (privacy policy,
 license agreement, third-party notices and support), in Chinese and English.
 

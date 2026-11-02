@@ -31,7 +31,7 @@ const onScroll = (): void => {
 
 const updateCanonical = (): void => {
   const link = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
-  if (link) link.setAttribute('href', `https://legal.naspk.com${window.location.pathname}`)
+  if (link) link.setAttribute('href', `https://ugosapps.naspk.com${window.location.pathname}`)
 }
 
 const updateTitle = (): void => {

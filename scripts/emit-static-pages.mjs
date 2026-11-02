@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const dist = join(root, 'dist')
-const site = 'https://legal.naspk.com'
+const site = 'https://ugosapps.naspk.com'
 
 const apps = [
   { slug: 'yun139', zh: '移动云盘', en: 'China Mobile Cloud' },
