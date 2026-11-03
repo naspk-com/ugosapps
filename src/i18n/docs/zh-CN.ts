@@ -15,7 +15,495 @@ const accountStatus = (app: AppInfo): string =>
     ? `账号状态请以 ${portalCell(app)} 为准。`
     : '账号状态请以服务商官方页面为准。'
 
+// 域联 UniLink 是域名 / DNS 工具类应用，处理的信息与网盘应用不同，文档单独编写。
+const unilinkPrivacy = (app: AppInfo): DocPage => ({
+  eyebrow: 'Privacy Policy',
+  title: '隐私政策',
+  lead: `本政策适用于${app.name.zh}（<span class="mono">${app.id}</span>）。这是一款运行在你自有 NAS 上的域名与 DNS 管理工具，开发者不运营中转服务器。`,
+  meta: `生效日期：${UPDATED}　·　最近更新：${UPDATED}`,
+  sections: [
+    {
+      id: 'scope',
+      title: '1. 适用范围',
+      blocks: [
+        {
+          kind: 'text',
+          html: `本政策适用于${app.name.zh}（<span class="mono">${app.id}</span>）。应用运行在用户自有的绿联 NAS（UGOS Pro）上，你的域名、解析记录、证书与 API 凭据均保存在这台设备内。其他 com.naspk.* 应用适用各自目录下的政策，可在<a href="/index.html">法律中心首页</a>查看。`,
+        },
+      ],
+    },
+    {
+      id: 'data',
+      title: '2. 我们处理的信息',
+      blocks: [
+        {
+          kind: 'text',
+          html: '<h3>2.1 DNS 服务商 API 凭据</h3><p>为读取与管理域名，你需要在应用内填写阿里云、腾讯云或 Cloudflare 的 API 凭据（如 AccessKey ID / Secret、API Token）。凭据仅保存在你的 NAS 应用数据目录，落盘时加密存储，文件权限限制为仅应用账号可读；日志不会输出完整密钥。开发者不会收到、上传或代为保管这些凭据。</p>',
+        },
+        {
+          kind: 'text',
+          html: '<h3>2.2 域名与解析数据</h3><p>应用会读取域名列表、DNS 记录、子域、DNSSEC 状态、域名到期时间与解析线路等信息，并把必要的缓存写入本机数据库，用于加速展示与离线查看。上述数据不会上传至开发者服务器。</p>',
+        },
+        {
+          kind: 'text',
+          html: '<h3>2.3 证书与私钥</h3><p>免费证书通过 ACME 协议向证书颁发机构申请，证书与私钥保存在应用数据目录，或你在「应用设置 → 文件夹授权」中指定的目录。私钥不会离开你的 NAS，也不会发送给开发者。</p>',
+        },
+        {
+          kind: 'text',
+          html: '<h3>2.4 任务与运行日志</h3><p>应用在本机保存任务、事件与调度记录，并写入运行日志用于故障排查。日志可能包含时间、错误码、接口路径、域名与记录名；日志不会自动上传，你可以在应用设置中调整级别或自行清理。</p>',
+        },
+        {
+          kind: 'text',
+          html: '<h3>2.5 AI 助手</h3><p>AI 助手为可选功能，默认关闭。启用时你需要自行填写兼容 OpenAI 协议的服务地址、模型与 API Key；你发送的提示词以及明确选择交给工具处理的文本会直接发往你配置的服务商，开发者不接收这些内容。API Key 仅保存在本机。</p>',
+        },
+        { kind: 'text', html: '<h3>2.6 我们不收集的信息</h3>' },
+        {
+          kind: 'list',
+          items: [
+            '不收集设备唯一标识、位置、通讯录、剪贴板或使用行为统计；',
+            '不集成广告、统计分析或推送 SDK；',
+            '不读取未授权目录，不扫描与域名管理无关的文件；',
+            '不向任何第三方出售、出租或交换你的数据。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'perm',
+      title: '3. 权限与系统能力',
+      blocks: [
+        {
+          kind: 'text',
+          html: '应用申请联网权限（<span class="mono">NETWORK.ACCESS_INTERNET</span>）以访问 DNS 服务商接口与证书颁发机构；系统命令执行能力（<span class="mono">SYSTEM.EXEC_SYSTEM_COMMAND</span>）仅用于由系统拉起启动脚本，应用不会执行其他外部命令。证书落盘目录通过 UGOS「应用设置 → 文件夹授权」显式选择，应用不申请整盘存储权限；撤销授权或卸载后即失去相应访问能力。',
+        },
+      ],
+    },
+    {
+      id: 'storage',
+      title: '4. 存储位置与保留期限',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['内容', '位置', '卸载时'],
+          rows: [
+            ['API 凭据与配置', '应用数据目录', '随应用数据一并删除'],
+            ['域名与解析缓存', '应用数据目录 / 本地数据库', '一并删除'],
+            ['证书与私钥', '应用数据目录或授权目录', '按授权目录策略保留'],
+            ['运行日志', '应用日志目录', '一并删除'],
+          ],
+        },
+        {
+          kind: 'text',
+          html: '凭据与缓存保留至你删除对应服务商连接或卸载应用为止。卸载前如需保留配置，请自行备份应用数据目录；升级安装不会清空已有数据。',
+        },
+      ],
+    },
+    {
+      id: 'share',
+      title: '5. 共享与第三方',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '<strong>DNS 服务商：</strong>阿里云、腾讯云、Cloudflare 等，用于读取与写入解析记录，同时受其隐私政策约束。',
+            '<strong>证书颁发机构：</strong>ACME 签发过程中会向 CA 提交域名与验证信息。',
+            '<strong>公开注册数据：</strong>通过 RDAP 查询域名到期与注册信息。',
+            '<strong>大模型服务方：</strong>仅在你启用 AI 助手并主动发送内容时参与。',
+            '<strong>UGOS 平台：</strong>提供应用运行、身份识别与文件夹授权能力，遵循绿联云平台政策。',
+          ],
+        },
+        {
+          kind: 'text',
+          html: '除上述必要交互外，应用不会主动向开发者或任何其他方传输你的数据。',
+        },
+      ],
+    },
+    {
+      id: 'security',
+      title: '6. 安全措施',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '服务只监听回环地址，不向局域网暴露端口；',
+            '身份由系统网关注入的请求头解析，仅管理员可用；',
+            '凭据加密存储，日志脱敏；',
+            '建议为 API 凭据授予最小权限，并定期轮换。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'rights',
+      title: '7. 你的权利',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '随时在应用内删除服务商连接，清除对应 API 凭据与缓存；',
+            '随时删除证书、任务记录与日志；',
+            '卸载应用以清除本机数据；',
+            '通过下方联系方式提出查询、更正或删除请求。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'minors',
+      title: '8. 未成年人',
+      blocks: [
+        {
+          kind: 'text',
+          html: '本应用面向具备域名与 DNS 管理能力的成年用户，不面向未成年人提供服务。',
+        },
+      ],
+    },
+    {
+      id: 'changes',
+      title: '9. 政策更新',
+      blocks: [
+        {
+          kind: 'text',
+          html: '本政策可能随功能调整而更新，最新版本始终发布在<a href="privacy.html">本页面</a>，重大变更会在应用内提示。继续使用即表示你接受更新后的政策。',
+        },
+      ],
+    },
+    {
+      id: 'contact',
+      title: '10. 联系我们',
+      blocks: [
+        {
+          kind: 'text',
+          html: `开发者：${DEVELOPER}<br>官网与联系方式：<a href="${SITE}" target="_blank" rel="noopener">${SITE}</a>`,
+        },
+      ],
+    },
+  ],
+})
+
+const unilinkTerms = (app: AppInfo): DocPage => ({
+  eyebrow: 'License Agreement',
+  title: '用户许可协议',
+  lead: `本协议是你与开发者之间关于${app.name.zh}（<span class="mono">${app.id}</span>）使用许可的约定，请在使用前完整阅读。`,
+  meta: `生效日期：${UPDATED}　·　最近更新：${UPDATED}`,
+  sections: [
+    {
+      id: 'grant',
+      title: '1. 许可授予',
+      blocks: [
+        {
+          kind: 'text',
+          html: '在你遵守本协议的前提下，开发者授予你一项个人、非独占、不可转让、不可再许可的许可，允许你在自有的绿联 NAS 设备上安装并使用本应用。本应用为闭源软件，你获得的是使用权而非所有权。',
+        },
+      ],
+    },
+    {
+      id: 'restrictions',
+      title: '2. 使用限制',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '不得对本应用进行反向工程、反编译、反汇编或尝试获取源代码，法律强制允许的情形除外；',
+            '不得修改、拆分、再发布、出租、出售、转售本应用或其衍生作品；',
+            '不得移除或隐藏应用中的版权、商标与其他权利标识；',
+            '不得将本应用用于违反法律法规、侵害他人权益或破坏网络安全的用途。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'user',
+      title: '3. 你的责任',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '<strong>域名权属：</strong>你应确保对所管理的域名拥有合法管理权限；',
+            '<strong>解析变更风险：</strong>DNS、DNSSEC、子域与证书变更会直接影响业务可用性，请先在测试域名验证；',
+            '<strong>合规义务：</strong>域名实名、备案、内容合规等义务由你自行承担；',
+            '<strong>凭据保管：</strong>API 凭据由你自行申请与保管，因凭据泄露造成的损失由你承担。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'third-party',
+      title: '4. 第三方服务',
+      blocks: [
+        {
+          kind: 'text',
+          html: '本应用通过阿里云、腾讯云、Cloudflare 等 DNS 服务商以及 ACME 证书颁发机构、RDAP 公开查询完成功能。第三方服务的可用性、配额、资费与政策由其自行决定，开发者无法保证其始终可用或符合你的预期。',
+        },
+        {
+          kind: 'text',
+          html: '第三方组件与许可信息请参见<a href="third-party.html">第三方组件说明</a>。',
+        },
+      ],
+    },
+    {
+      id: 'disclaimer',
+      title: '5. 风险提示与免责',
+      blocks: [
+        {
+          kind: 'text',
+          html: '本应用按「现状」提供。DNS 变更可能导致解析中断、邮件收发失败、网站不可访问或证书签发失败，请在变更前做好记录备份并确认影响范围。在法律允许的最大范围内，开发者不对因使用或无法使用本应用造成的业务中断、数据丢失或收益损失承担责任。',
+        },
+      ],
+    },
+    {
+      id: 'liability',
+      title: '6. 责任限制',
+      blocks: [
+        {
+          kind: 'text',
+          html: '在任何情况下，开发者就本协议承担的赔偿责任总额不超过你就本应用实际支付的费用。部分司法辖区不允许排除默示担保或限制间接损失，上述限制可能对你不完全适用。',
+        },
+      ],
+    },
+    {
+      id: 'update',
+      title: '7. 更新、终止与卸载',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '开发者可能发布更新以修复问题或增加功能，更新后继续使用视为接受更新内容；',
+            '你若违反本协议，许可自动终止，你应停止使用并卸载本应用；',
+            '你可以随时卸载本应用以终止本协议，卸载后本机数据按应用策略清除。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'law',
+      title: '8. 法律适用与争议解决',
+      blocks: [
+        {
+          kind: 'text',
+          html: '本协议适用中华人民共和国法律。因本协议产生的争议，双方应友好协商解决；协商不成的，提交开发者所在地有管辖权的人民法院处理。',
+        },
+      ],
+    },
+    {
+      id: 'misc',
+      title: '9. 其他',
+      blocks: [
+        {
+          kind: 'text',
+          html: `本协议未尽事宜，以<a href="privacy.html">隐私政策</a>及适用法律为准。如对协议有疑问，可通过 <a href="${SITE}" target="_blank" rel="noopener">${SITE}</a> 与我们联系。`,
+        },
+      ],
+    },
+  ],
+})
+
+const unilinkThirdParty = (app: AppInfo): DocPage => ({
+  eyebrow: 'Third-Party Notices',
+  title: '第三方组件说明',
+  lead: `${app.name.zh}在使用过程中会调用第三方云服务与开源组件，本页说明其范围与许可。`,
+  meta: `生效日期：${UPDATED}　·　最近更新：${UPDATED}`,
+  sections: [
+    {
+      id: 'providers',
+      title: '1. 云服务提供方',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['服务提供方', '用途', '说明'],
+          rows: [
+            ['阿里云', '域名与云解析 DNS', '使用其官方 OpenAPI 读写解析记录，受其服务条款约束'],
+            ['腾讯云', '域名与 DNSPod 解析', '使用其官方 OpenAPI 读写解析记录'],
+            ['Cloudflare', 'DNS 与 DNSSEC', '通过 API Token 管理区域与解析记录'],
+            ['ACME 证书颁发机构', '免费 SSL 证书签发', '按 CA 的订阅者协议与速率限制执行'],
+            ['RDAP 服务', '域名注册信息公开查询', '公开数据，无需账号'],
+            ['大模型服务方', 'AI 助手（可选）', '由你自行配置，默认关闭'],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'oss',
+      title: '2. 开源组件',
+      blocks: [
+        {
+          kind: 'text',
+          html: '本应用包含以下开源组件，均按其原始许可分发，许可文本随组件保留：',
+        },
+        {
+          kind: 'table',
+          head: ['组件', '许可', '用途'],
+          rows: [
+            ['Vue 3 / Vite', 'MIT', '前端框架与构建工具'],
+            ['Nuxt UI', 'MIT', '界面组件库'],
+            ['vue-i18n', 'MIT', '多语言'],
+            ['markdown-it', 'MIT', '内容渲染'],
+            ['go-chi/chi', 'MIT', 'HTTP 路由'],
+            ['go-acme/lego', 'MIT', 'ACME 证书签发'],
+            ['miekg/dns', 'BSD-3-Clause', 'DNS 解析与记录处理'],
+            ['modernc.org/sqlite', 'BSD-3-Clause', '本地数据库'],
+            ['cloudflare-go', 'BSD-3-Clause', 'Cloudflare API 客户端'],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'proprietary',
+      title: '3. 专有组件',
+      blocks: [
+        {
+          kind: 'text',
+          html: '除上述开源组件外，应用还包含 UGOS Core SDK（由绿联云提供）与本应用的闭源业务代码。这些组件不适用任何开源许可，未经授权不得提取、分发或用于其他产品。',
+        },
+      ],
+    },
+    {
+      id: 'notice',
+      title: '4. 许可声明',
+      blocks: [
+        {
+          kind: 'notice',
+          html: '本页仅用于满足开源许可的署名与告知义务，不改变任何组件的许可条款。若本页与组件附带许可文本存在冲突，以组件原始许可文本为准。',
+        },
+      ],
+    },
+  ],
+})
+
+const unilinkSupport = (app: AppInfo): DocPage => ({
+  eyebrow: 'Support',
+  title: '技术支持',
+  lead: `以下是${app.name.zh}常见问题的排查顺序，请按步骤确认后再反馈。`,
+  meta: `生效日期：${UPDATED}　·　最近更新：${UPDATED}`,
+  sections: [
+    {
+      id: 'quick',
+      title: '1. 快速排查',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '确认应用在 UGOS 应用中心处于「已启用」状态；',
+            '确认 NAS 可正常访问对应云服务商与证书颁发机构，排除网络与 DNS 问题；',
+            '在应用内重新校验 API 凭据，排除凭据过期或权限不足；',
+            '重启应用（非重启整机）后重试；',
+            '若问题出现在升级之后，请查看应用日志中的错误码。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'credential',
+      title: '2. 凭据与连接',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '阿里云建议使用仅含云解析权限的 RAM 子账号 AccessKey；',
+            '腾讯云建议使用仅含 DNSPod 权限的子账号密钥；',
+            'Cloudflare 建议使用限定 Zone.DNS 编辑权限的 API Token，而非全局 Key；',
+            '提示鉴权失败时，请先在厂商控制台验证凭据可用性与 IP 白名单设置。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'dns',
+      title: '3. 解析记录与生效',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '记录写入成功后仍需等待 TTL 与递归缓存过期，通常为几分钟到数小时；',
+            '确认域名的权威 NS 已指向当前管理的服务商；',
+            'DNSSEC 配置错误会导致解析失败，变更前请谨慎操作；',
+            '批量修改建议先在测试子域验证，再应用到主域名。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'cert',
+      title: '4. 证书签发',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            'HTTP-01 验证需要域名可被公网访问，且 80 端口可达；',
+            '使用 DNS-01 验证时，请确保 API 凭据具备写入 TXT 记录的权限；',
+            '检查域名是否配置了 CAA 记录限制签发机构；',
+            '证书落盘目录需要在「应用设置 → 文件夹授权」中授权后才能写入。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'ddns',
+      title: '5. 动态域名（DDNS）',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '确认记录的 TTL 设置较短，以便公网 IP 变更后快速生效；',
+            '若公网 IP 由运营商 NAT 分配，DDNS 无法解决端口不可达问题；',
+            '调度失败时可在任务页面查看最近一次执行结果与错误信息。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'data',
+      title: '6. 数据位置与卸载清理',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['内容', '位置', '卸载时'],
+          rows: [
+            ['API 凭据与配置', '应用数据目录', '随应用数据一并删除'],
+            ['域名与解析缓存', '应用数据目录 / 本地数据库', '一并删除'],
+            ['证书与私钥', '应用数据目录或授权目录', '按授权目录策略保留'],
+            ['运行日志', '应用日志目录', '一并删除'],
+          ],
+        },
+        {
+          kind: 'text',
+          html: '如需保留配置，请在卸载前自行备份应用数据目录。升级安装不会清空已有数据。',
+        },
+      ],
+    },
+    {
+      id: 'log',
+      title: '7. 获取日志',
+      blocks: [
+        {
+          kind: 'text',
+          html: '反馈问题时可提供应用日志，但请先移除其中可能包含的域名、记录名与凭据信息：',
+        },
+        {
+          kind: 'list',
+          items: [
+            '在应用设置中将日志级别调整为 <span class="mono">debug</span>；',
+            '复现问题后，从应用日志目录导出最近的日志文件；',
+            '说明应用名称、版本、NAS 型号、UGOS 版本、问题现象与发生时间。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'contact',
+      title: '8. 联系我们',
+      blocks: [
+        {
+          kind: 'text',
+          html: `开发者：${DEVELOPER}<br>官网与联系方式：<a href="${SITE}" target="_blank" rel="noopener">${SITE}</a>`,
+        },
+      ],
+    },
+  ],
+})
+
 const privacy = (app: AppInfo): DocPage => {
+  if (app.domainTool) return unilinkPrivacy(app)
   const name = app.name.zh
   const id = app.id
 
@@ -179,7 +667,7 @@ const privacy = (app: AppInfo): DocPage => {
   }
 }
 
-const terms = (app: AppInfo): DocPage => ({
+const terms = (app: AppInfo): DocPage => app.domainTool ? unilinkTerms(app) : ({
   eyebrow: 'License Agreement',
   title: '用户许可协议',
   lead: `本协议是你与 NASPK 应用开发者之间就使用${app.name.zh}（<span class="mono">${app.id}</span>）达成的法律协议。安装或使用本应用即表示你已阅读并同意本协议。`,
@@ -309,7 +797,7 @@ const terms = (app: AppInfo): DocPage => ({
   ],
 })
 
-const thirdParty = (app: AppInfo): DocPage => ({
+const thirdParty = (app: AppInfo): DocPage => app.domainTool ? unilinkThirdParty(app) : ({
   eyebrow: 'Third-Party Notices',
   title: '第三方组件与许可',
   lead: `本页列出${app.name.zh}连接的云服务、使用的开源组件与第三方专有组件。应用本身为闭源软件，不提供源代码地址；下列组件仍归其权利人所有，并适用各自许可。`,
@@ -386,7 +874,7 @@ const thirdParty = (app: AppInfo): DocPage => ({
   ],
 })
 
-const support = (app: AppInfo): DocPage => ({
+const support = (app: AppInfo): DocPage => app.domainTool ? unilinkSupport(app) : ({
   eyebrow: 'Support',
   title: '技术支持',
   lead: `本页汇总${app.name.zh}（<span class="mono">${app.id}</span>）最常见的配置与故障处理方式。应用为闭源软件，不提供源代码仓库或公开的 issue 跟踪地址，请通过开发者官网联系我们。`,

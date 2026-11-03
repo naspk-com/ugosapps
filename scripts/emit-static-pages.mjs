@@ -26,6 +26,29 @@ const apps = [
   { slug: 'thunder', zh: '迅雷云盘', en: 'Thunder Drive' },
   { slug: 'ucpan', zh: 'UC 网盘', en: 'UC Drive' },
   { slug: 'wopan', zh: '联通云盘', en: 'Unicom Cloud Drive' },
+  {
+    slug: 'unilink',
+    zh: '域联 UniLink',
+    en: 'UniLink',
+    descs: {
+      privacy: {
+        zh: 'API 凭据、域名与解析数据、证书私钥、日志与 AI 功能数据的处理方式。',
+        en: 'How API credentials, domain and DNS data, private keys, logs and AI feature data are handled.',
+      },
+      terms: {
+        zh: '闭源软件的使用许可、DNS 变更风险、第三方服务与责任限制。',
+        en: 'License grant, DNS change risk, third-party services and liability limits.',
+      },
+      'third-party': {
+        zh: 'DNS 服务商、证书颁发机构、开源组件与专有组件的许可说明。',
+        en: 'DNS providers, certificate authorities, open-source and proprietary components.',
+      },
+      support: {
+        zh: '凭据配置、解析生效、证书签发、DDNS 与日志排查方法。',
+        en: 'Credentials, record propagation, certificate issuance, DDNS and log troubleshooting.',
+      },
+    },
+  },
 ]
 
 const docs = [
@@ -170,6 +193,8 @@ for (const app of apps) {
   pushUrl(enPaths.home, enPaths.zh, enPaths.home)
 
   for (const doc of docs) {
+    const descZh = app.descs?.[doc.id]?.zh ?? doc.descZh
+    const descEn = app.descs?.[doc.id]?.en ?? doc.descEn
     const zhDocPath = `${zhPaths.home.replace('/index.html', '')}/${doc.id}.html`
     const enDocPath = `${enPaths.home.replace('/index.html', '')}/${doc.id}.html`
 
@@ -178,7 +203,7 @@ for (const app of apps) {
       renderPage({
         locale: 'zh-CN',
         title: `${app.zh} ${doc.zh} · NASPK`,
-        description: `${app.zh}${doc.zh}：${doc.descZh}`,
+        description: `${app.zh}${doc.zh}：${descZh}`,
         selfUrl: `${site}${zhDocPath}`,
         alternates: { zh: `${site}${zhDocPath}`, en: `${site}${enDocPath}` },
       }),
@@ -190,7 +215,7 @@ for (const app of apps) {
       renderPage({
         locale: 'en',
         title: `${app.en} ${doc.en} · NASPK`,
-        description: `${app.en} ${doc.en}: ${doc.descEn}`,
+        description: `${app.en} ${doc.en}: ${descEn}`,
         selfUrl: `${site}${enDocPath}`,
         alternates: { zh: `${site}${zhDocPath}`, en: `${site}${enDocPath}` },
       }),

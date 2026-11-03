@@ -8,6 +8,7 @@ import quarkIcon from '@/assets/apps/quark.png'
 import thunderIcon from '@/assets/apps/thunder.png'
 import ucpanIcon from '@/assets/apps/ucpan.png'
 import wopanIcon from '@/assets/apps/wopan.png'
+import unilinkIcon from '@/assets/apps/unilink.png'
 
 export interface Localized {
   zh: string
@@ -29,6 +30,8 @@ export interface AppInfo {
   login: Localized
   /** The Thunder app ships a proprietary Xunlei engine */
   thunderEngine?: boolean
+  /** Domain / DNS management tool, uses its own document set */
+  domainTool?: boolean
 }
 
 export const apps: AppInfo[] = [
@@ -130,6 +133,17 @@ export const apps: AppInfo[] = [
     portal: 'https://pan.wo.cn',
     portalLabel: 'pan.wo.cn',
     login: { zh: '账号密码或 Token', en: 'account password or token' },
+  },
+  {
+    slug: 'unilink',
+    id: 'com.naspk.unilink',
+    name: { zh: '域联 UniLink', en: 'UniLink' },
+    provider: { zh: '尘墨成', en: 'Dustinky' },
+    icon: unilinkIcon,
+    portal: 'https://www.dustinky.com',
+    portalLabel: 'www.dustinky.com',
+    login: { zh: '阿里云 / 腾讯云 / Cloudflare API 凭据', en: 'Aliyun, Tencent Cloud or Cloudflare API credentials' },
+    domainTool: true,
   },
 ]
 
