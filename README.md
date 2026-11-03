@@ -1,11 +1,14 @@
-# NASPK Legal & Privacy Center
+# NASPK · UGOS Pro Apps
 
-Source of <https://ugosapps.naspk.com> — the compliance center for NASPK's UGOS Pro
-cloud-drive apps. Every app keeps its own document directory (privacy policy,
-license agreement, third-party notices and support), in Chinese and English.
+Source of <https://ugosapps.naspk.com> — the product site for NASPK's UGOS Pro
+apps on UGREEN NAS, plus the compliance center behind every app listing. The
+landing page introduces the app suite (capabilities, catalog, install flow,
+compliance and FAQ), while each app keeps its own document directory (privacy
+policy, license agreement, third-party notices and support), in Chinese and
+English.
 
-Built with Vue 3 + Vite + TypeScript + vue-i18n. No router dependency, no CDN
-script, no remote font — the whole site is static files.
+Lightweight on purpose: no marketing scripts, no remote fonts and no CDN —
+the whole site is static files.
 
 ## Why one directory per app
 
@@ -15,8 +18,8 @@ owns the concrete URLs approved by the app center:
 
 | URL | Content |
 | --- | --- |
-| `/` | Legal center (zh-CN) |
-| `/en/index.html` | Legal center (English) |
+| `/` | Product landing page (zh-CN) |
+| `/en/index.html` | Product landing page (English) |
 | `/<app>/index.html` | App document hub |
 | `/<app>/privacy.html` | Privacy policy |
 | `/<app>/terms.html` | License agreement |
@@ -42,7 +45,7 @@ npm run preview    # serve dist/ locally
 `npm run build` produces:
 
 - `dist/assets/*` — hashed JS/CSS bundles
-- 102 alias pages copied from `dist/index.html`, each with its own `<title>`,
+- 112 alias pages copied from `dist/index.html`, each with its own `<title>`,
   description, canonical and `hreflang` links
 - `dist/sitemap.xml` with `xhtml:link` alternates for every URL
 - `dist/404.html` (`noindex`)
@@ -65,7 +68,6 @@ scripts/emit-static-pages.mjs  Post-build alias pages + sitemap
 src/
   App.vue                   Route switch, title/canonical sync, scroll progress
   router.ts                 Minimal path parser (no vue-router)
-  theme.ts                  auto / light / dark, persisted in localStorage
   i18n/
     index.ts                createI18n setup
     ui/{zh-CN,en-US}.ts     Interface strings
@@ -76,7 +78,7 @@ src/
       index.ts              getDoc, docPath, homePath helpers
   components/               Header, footer, inline SVG icons
   views/                    Home, app hub, document, 404
-  styles/main.css           Design tokens, light/dark themes, layout
+  styles/main.css           Dark design system, layout and document typography
 public/                     favicon.svg, robots.txt
 ```
 

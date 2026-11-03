@@ -28,7 +28,6 @@ export default {
     lead: 'A cloud drive suite developed and adapted by NASPK for UGREEN NAS. China Mobile Cloud, Alibaba Cloud Drive, 115, Quark, Thunder and more — browse, stream and upload from one place, with credentials and files staying on your own device.',
     primary: 'Browse the apps',
     secondary: 'Read our principles',
-    orb: '11 apps · one NAS',
     marquee: 'Mainstream cloud drives',
     stats: {
       apps: 'apps',

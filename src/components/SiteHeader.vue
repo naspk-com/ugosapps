@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DocIcon from '@/components/DocIcon.vue'
 import { docPath, homePath } from '@/i18n/docs'
-import { docIds } from '@/i18n/docs/types'
 import { route } from '@/router'
 
 const { t } = useI18n()
@@ -21,12 +20,6 @@ const langHref = computed(() => {
 })
 
 const isHome = computed(() => route.value.kind === 'home')
-
-const appSlug = computed(() =>
-  route.value.kind === 'app' || route.value.kind === 'doc' ? route.value.slug : '',
-)
-
-const activeDoc = computed(() => (route.value.kind === 'doc' ? route.value.doc : null))
 
 const sections = [
   { id: 'product', key: 'nav.product' },
@@ -48,29 +41,16 @@ const sections = [
       </a>
 
       <nav class="nav">
-        <template v-if="appSlug">
-          <a
-            v-for="doc in docIds"
-            :key="doc"
-            :href="docPath(appSlug, doc, route.locale)"
-            :class="{ active: activeDoc === doc }"
-          >
-            {{ t(`nav.${doc}`) }}
-          </a>
-        </template>
-        <template v-else>
-          <a
-            v-for="section in sections"
-            :key="section.id"
-            :href="isHome ? `#${section.id}` : `${homeHref}#${section.id}`"
-          >
-            {{ t(section.key) }}
-          </a>
-        </template>
+        <a
+          v-for="section in sections"
+          :key="section.id"
+          :href="isHome ? `#${section.id}` : `${homeHref}#${section.id}`"
+        >
+          {{ t(section.key) }}
+        </a>
       </nav>
 
       <div class="header-actions">
-        <a v-if="!isHome" class="header-cta" :href="`${homeHref}#apps`">{{ t('nav.apps') }}</a>
         <a class="lang-switch" :href="langHref">
           <DocIcon name="globe" />
           {{ t('lang.switch') }}

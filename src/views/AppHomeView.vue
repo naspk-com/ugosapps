@@ -76,7 +76,7 @@ const others = computed(() =>
 
     <section class="section">
       <div class="section-head">
-        <span class="section-index">{{ t('appHome.docsTitle') }}</span>
+        <span class="section-index">Docs</span>
         <h2>{{ t('appHome.docsTitle') }}</h2>
       </div>
       <div class="doc-grid">
@@ -96,7 +96,7 @@ const others = computed(() =>
 
     <section class="section">
       <div class="section-head">
-        <span class="section-index">{{ t('appHome.infoTitle') }}</span>
+        <span class="section-index">Info</span>
         <h2>{{ t('appHome.infoTitle') }}</h2>
       </div>
       <div class="table-wrap">
@@ -139,7 +139,7 @@ const others = computed(() =>
 
     <section class="section">
       <div class="section-head">
-        <span class="section-index">{{ t('appHome.moreTitle') }}</span>
+        <span class="section-index">More</span>
         <h2>{{ t('appHome.moreTitle') }}</h2>
         <p class="section-desc">{{ t('appHome.moreDesc') }}</p>
       </div>

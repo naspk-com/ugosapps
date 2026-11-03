@@ -113,7 +113,6 @@ const langChips = ['简体中文', 'English', 'PC 端']
           >
             <img :src="app.icon" alt="" width="34" height="34" loading="lazy" decoding="async" />
           </span>
-          <p class="orb-caption">{{ t('home.orb') }}</p>
         </div>
       </div>
     </section>

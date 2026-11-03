@@ -28,7 +28,6 @@ export default {
     lead: 'NASPK 为绿联 NAS 开发与适配的云盘套件。移动云盘、阿里云盘、115、夸克、迅雷等主流服务，一个入口统一浏览、播放与上传；凭据与文件都留在你自己的设备上。',
     primary: '浏览应用矩阵',
     secondary: '查看合规原则',
-    orb: '11 apps · one NAS',
     marquee: '覆盖主流云盘',
     stats: {
       apps: '款应用',

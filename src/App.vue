@@ -57,7 +57,14 @@ watch(
     setLocale(current.locale)
     updateCanonical()
     updateTitle()
-    window.scrollTo({ top: 0, behavior: 'auto' })
+    const hash = window.location.hash
+    if (hash) {
+      void nextTick(() => {
+        document.querySelector(hash)?.scrollIntoView({ behavior: 'auto', block: 'start' })
+      })
+    } else {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+    }
     void nextTick(observeReveal)
   },
   { immediate: true },
