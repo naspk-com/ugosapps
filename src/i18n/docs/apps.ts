@@ -15,6 +15,16 @@ export interface Localized {
   en: string
 }
 
+export const appCategories = [
+  { id: 'cloud', name: { zh: '云盘工具', en: 'Cloud drives' } },
+  { id: 'network', name: { zh: '域名与网络', en: 'Domains & network' } },
+] as const
+
+export type AppCategoryId = (typeof appCategories)[number]['id']
+
+export const categoryById = (id: AppCategoryId): Localized =>
+  appCategories.find((category) => category.id === id)?.name ?? { zh: id, en: id }
+
 export interface AppInfo {
   /** URL segment, e.g. `yun139` */
   slug: string
@@ -22,6 +32,8 @@ export interface AppInfo {
   id: string
   name: Localized
   provider: Localized
+  /** Catalog grouping; more categories will be added as new app types ship */
+  category: AppCategoryId
   /** App icon taken from the app project itself */
   icon: string
   /** Official portal, may be empty when the provider has no public site */
@@ -40,6 +52,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.yun139',
     name: { zh: '移动云盘', en: 'China Mobile Cloud' },
     provider: { zh: '中国移动', en: 'China Mobile' },
+    category: 'cloud',
     icon: yun139Icon,
     portal: 'https://yun.139.com',
     portalLabel: 'yun.139.com',
@@ -50,6 +63,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.alipan',
     name: { zh: '阿里云盘', en: 'Alibaba Cloud Drive' },
     provider: { zh: '阿里云盘', en: 'Alipan' },
+    category: 'cloud',
     icon: alipanIcon,
     portal: 'https://www.alipan.com',
     portalLabel: 'www.alipan.com',
@@ -60,6 +74,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.cloud189',
     name: { zh: '天翼云盘', en: 'Tianyi Cloud Drive' },
     provider: { zh: '中国电信', en: 'China Telecom' },
+    category: 'cloud',
     icon: cloud189Icon,
     portal: 'https://cloud.189.cn',
     portalLabel: 'cloud.189.cn',
@@ -70,6 +85,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.guangyapan',
     name: { zh: '光鸭云盘', en: 'Guangya Drive' },
     provider: { zh: '光鸭云盘', en: 'Guangya' },
+    category: 'cloud',
     icon: guangyapanIcon,
     login: { zh: '账号密码或 Cookie', en: 'account password or cookie' },
   },
@@ -78,6 +94,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.pan115',
     name: { zh: '115 网盘', en: '115 Drive' },
     provider: { zh: '115 科技', en: '115 Technology' },
+    category: 'cloud',
     icon: pan115Icon,
     portal: 'https://115.com',
     portalLabel: '115.com',
@@ -88,6 +105,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.pan123',
     name: { zh: '123 云盘', en: '123 Cloud Drive' },
     provider: { zh: '123 云盘', en: '123Pan' },
+    category: 'cloud',
     icon: pan123Icon,
     portal: 'https://www.123pan.com',
     portalLabel: 'www.123pan.com',
@@ -98,6 +116,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.quark',
     name: { zh: '夸克网盘', en: 'Quark Drive' },
     provider: { zh: '夸克', en: 'Quark' },
+    category: 'cloud',
     icon: quarkIcon,
     portal: 'https://pan.quark.cn',
     portalLabel: 'pan.quark.cn',
@@ -108,6 +127,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.thunder',
     name: { zh: '迅雷云盘', en: 'Thunder Drive' },
     provider: { zh: '迅雷', en: 'Xunlei' },
+    category: 'cloud',
     icon: thunderIcon,
     portal: 'https://www.xunlei.com',
     portalLabel: 'www.xunlei.com',
@@ -119,6 +139,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.ucpan',
     name: { zh: 'UC 网盘', en: 'UC Drive' },
     provider: { zh: 'UC', en: 'UC' },
+    category: 'cloud',
     icon: ucpanIcon,
     portal: 'https://drive.uc.cn',
     portalLabel: 'drive.uc.cn',
@@ -129,6 +150,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.wopan',
     name: { zh: '联通云盘', en: 'Unicom Cloud Drive' },
     provider: { zh: '中国联通', en: 'China Unicom' },
+    category: 'cloud',
     icon: wopanIcon,
     portal: 'https://pan.wo.cn',
     portalLabel: 'pan.wo.cn',
@@ -139,6 +161,7 @@ export const apps: AppInfo[] = [
     id: 'com.naspk.unilink',
     name: { zh: '域联 UniLink', en: 'UniLink' },
     provider: { zh: '尘墨成', en: 'Dustinky' },
+    category: 'network',
     icon: unilinkIcon,
     portal: 'https://www.dustinky.com',
     portalLabel: 'www.dustinky.com',

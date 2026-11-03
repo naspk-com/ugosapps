@@ -823,6 +823,44 @@ body::before {
   box-shadow: 0 0 0 4px rgba(111, 242, 192, 0.1);
 }
 
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 22px 0 18px;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.filter-chip:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+.filter-chip.is-active {
+  border-color: rgba(111, 242, 192, 0.4);
+  background: var(--mint-dim);
+  color: var(--mint);
+}
+
+.filter-chip .mono {
+  font-size: 0.7rem;
+  opacity: 0.65;
+}
+
 .app-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(292px, 1fr));
@@ -886,14 +924,6 @@ body::before {
 .app-provider {
   color: var(--muted);
   font-size: 0.8rem;
-}
-
-.app-docs {
-  margin-top: 8px;
-  color: var(--mint);
-  font-size: 0.72rem;
-  font-weight: 550;
-  opacity: 0.85;
 }
 
 .app-arrow {
@@ -1000,118 +1030,6 @@ body::before {
   height: 120px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(139, 149, 255, 0.18), transparent 66%);
-}
-
-/* ---------- legal panel ---------- */
-
-.legal-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 48px;
-  align-items: center;
-  padding: 44px;
-  border-radius: calc(var(--radius) + 6px);
-  border: 1px solid var(--line);
-  background:
-    radial-gradient(120% 140% at 0% 0%, rgba(111, 242, 192, 0.09), transparent 55%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
-}
-
-.legal-panel h2 {
-  margin: 14px 0 12px;
-  font-size: clamp(1.55rem, 2.8vw, 2.05rem);
-}
-
-.legal-list {
-  display: grid;
-  gap: 8px;
-}
-
-.legal-row {
-  display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) 18px;
-  gap: 14px;
-  align-items: center;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid transparent;
-  color: var(--text);
-  transition: border-color 0.2s ease, background 0.2s ease;
-}
-
-.legal-row:hover {
-  color: var(--text);
-  border-color: var(--line);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.legal-row strong {
-  display: block;
-  font-size: 0.94rem;
-  font-weight: 600;
-}
-
-.legal-row small {
-  color: var(--faint);
-  font-size: 0.76rem;
-}
-
-.legal-icon {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  border: 1px solid var(--line);
-  background: rgba(111, 242, 192, 0.06);
-  color: var(--mint);
-}
-
-.legal-note {
-  margin: 22px 0 0;
-  color: var(--faint);
-  font-size: 0.76rem;
-  line-height: 1.7;
-}
-
-/* ---------- compliance ---------- */
-
-.compliance-card {
-  padding: 34px 36px;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
-}
-
-.compliance-lead {
-  margin: 0 0 22px;
-  color: var(--muted);
-}
-
-.check-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 14px 28px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.check-list li {
-  display: grid;
-  grid-template-columns: 22px 1fr;
-  gap: 12px;
-  align-items: start;
-  color: var(--text-soft);
-  font-size: 0.92rem;
-  line-height: 1.65;
-}
-
-.check-list .doc-icon {
-  width: 19px;
-  height: 19px;
-  color: var(--mint);
-  margin-top: 3px;
 }
 
 /* ---------- faq ---------- */
@@ -1846,12 +1764,6 @@ tbody tr:hover {
     margin-right: 14px;
   }
 
-  .legal-panel {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 32px;
-  }
-
   .steps {
     grid-template-columns: 1fr;
   }
@@ -1936,19 +1848,6 @@ tbody tr:hover {
   .bento-card.wide,
   .bento-card.full {
     grid-column: span 1;
-  }
-
-  .legal-panel {
-    padding: 24px;
-    border-radius: var(--radius);
-  }
-
-  .compliance-card {
-    padding: 24px;
-  }
-
-  .check-list {
-    grid-template-columns: 1fr;
   }
 
   .app-hero {

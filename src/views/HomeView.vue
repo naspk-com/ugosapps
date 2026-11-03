@@ -2,7 +2,13 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DocIcon from '@/components/DocIcon.vue'
-import { apps } from '@/i18n/docs/apps'
+import {
+  appCategories,
+  apps,
+  categoryById,
+  type AppCategoryId,
+  type AppInfo,
+} from '@/i18n/docs/apps'
 import { docPath } from '@/i18n/docs'
 import type { LocaleCode } from '@/i18n/docs/types'
 
@@ -11,6 +17,7 @@ const props = defineProps<{ locale: LocaleCode }>()
 const { t, tm } = useI18n()
 
 const query = ref('')
+const activeCategory = ref<AppCategoryId | 'all'>('all')
 
 type Feature = { num: string; title: string; desc: string }
 type Step = { num: string; title: string; desc: string }
@@ -19,24 +26,37 @@ type Faq = { q: string; a: string }
 const features = computed(() => tm('home.features') as unknown as Feature[])
 const steps = computed(() => tm('home.steps') as unknown as Step[])
 const faq = computed(() => tm('home.faq') as unknown as Faq[])
-const compliance = computed(() => tm('home.compliance') as unknown as string[])
+
+const categories = computed(() =>
+  appCategories.map((category) => ({
+    id: category.id,
+    name: category.name,
+    count: apps.filter((app) => app.category === category.id).length,
+  })),
+)
 
 const filtered = computed(() => {
   const keyword = query.value.trim().toLowerCase()
-  if (!keyword) return apps
-  return apps.filter((app) =>
-    [app.name.zh, app.name.en, app.id, app.slug, app.provider.zh, app.provider.en]
+  return apps.filter((app) => {
+    if (activeCategory.value !== 'all' && app.category !== activeCategory.value) return false
+    if (!keyword) return true
+    return [app.name.zh, app.name.en, app.id, app.slug, app.provider.zh, app.provider.en]
       .join(' ')
       .toLowerCase()
-      .includes(keyword),
-  )
+      .includes(keyword)
+  })
 })
 
-const nameOf = (app: (typeof apps)[number]): string =>
+const nameOf = (app: AppInfo): string =>
   props.locale === 'en-US' ? app.name.en : app.name.zh
 
-const providerOf = (app: (typeof apps)[number]): string =>
+const providerOf = (app: AppInfo): string =>
   props.locale === 'en-US' ? app.provider.en : app.provider.zh
+
+const categoryOf = (app: AppInfo): string => {
+  const name = categoryById(app.category)
+  return props.locale === 'en-US' ? name.en : name.zh
+}
 
 const unilink = computed(() => apps.find((app) => app.slug === 'unilink'))
 
@@ -52,13 +72,16 @@ const orbStyle = (index: number): Record<string, string> => {
   }
 }
 
-const docsCount = apps.length * 4
-
 const cardSize = (index: number): string =>
   index === 0 || index === 1 ? 'wide' : index === features.value.length - 1 ? 'full' : ''
 
 const loginChips = ['扫码', 'Token', 'Cookie', 'API Key']
 const langChips = ['简体中文', 'English', 'PC 端']
+
+const resetFilters = (): void => {
+  query.value = ''
+  activeCategory.value = 'all'
+}
 </script>
 
 <template>
@@ -76,7 +99,7 @@ const langChips = ['简体中文', 'English', 'PC 端']
             {{ t('home.primary') }}
             <DocIcon name="arrow" />
           </a>
-          <a class="btn btn-ghost" href="#legal">{{ t('home.secondary') }}</a>
+          <a class="btn btn-ghost" href="#product">{{ t('home.secondary') }}</a>
         </div>
         <div class="stat-strip">
           <div class="stat">
@@ -84,8 +107,8 @@ const langChips = ['简体中文', 'English', 'PC 端']
             <span>{{ t('home.stats.apps') }}</span>
           </div>
           <div class="stat">
-            <strong>{{ docsCount }}</strong>
-            <span>{{ t('home.stats.docs') }}</span>
+            <strong>{{ categories.length }}</strong>
+            <span>{{ t('home.stats.types') }}</span>
           </div>
           <div class="stat">
             <strong>2</strong>
@@ -181,11 +204,14 @@ const langChips = ['简体中文', 'English', 'PC 端']
             <span v-for="chip in langChips" :key="chip" class="visual-chip">{{ chip }}</span>
           </div>
           <div v-else class="bento-visual">
-            <span class="visual-chip mint">域名</span>
-            <span class="visual-chip mint">DNS</span>
-            <span class="visual-chip mint">SSL</span>
-            <span class="visual-chip mint">DDNS</span>
-            <a v-if="unilink" class="visual-chip" :href="docPath(unilink.slug, 'index', locale)">
+            <span class="visual-chip mint">{{ t('home.more.chip1') }}</span>
+            <span class="visual-chip mint">{{ t('home.more.chip2') }}</span>
+            <span class="visual-chip">{{ t('home.more.chip3') }}</span>
+            <a
+              v-if="unilink"
+              class="visual-chip"
+              :href="docPath(unilink.slug, 'index', locale)"
+            >
               {{ nameOf(unilink) }} →
             </a>
           </div>
@@ -214,6 +240,29 @@ const langChips = ['简体中文', 'English', 'PC 端']
         </div>
       </div>
 
+      <div class="filter-bar" role="group" :aria-label="t('home.filterLabel')">
+        <button
+          type="button"
+          class="filter-chip"
+          :class="{ 'is-active': activeCategory === 'all' }"
+          @click="activeCategory = 'all'"
+        >
+          {{ t('home.allApps') }}
+          <span class="mono">{{ apps.length }}</span>
+        </button>
+        <button
+          v-for="category in categories"
+          :key="category.id"
+          type="button"
+          class="filter-chip"
+          :class="{ 'is-active': activeCategory === category.id }"
+          @click="activeCategory = category.id"
+        >
+          {{ locale === 'en-US' ? category.name.en : category.name.zh }}
+          <span class="mono">{{ category.count }}</span>
+        </button>
+      </div>
+
       <div v-if="filtered.length" class="app-grid">
         <a
           v-for="app in filtered"
@@ -233,11 +282,10 @@ const langChips = ['简体中文', 'English', 'PC 端']
           <span class="app-body">
             <span class="app-name">
               {{ nameOf(app) }}
-              <span v-if="app.domainTool" class="tag">{{ t('home.tagTool') }}</span>
+              <span class="tag">{{ categoryOf(app) }}</span>
             </span>
             <span class="app-id mono">{{ app.id }}</span>
             <span class="app-provider">{{ providerOf(app) }}</span>
-            <span class="app-docs">{{ t('home.docsHint') }}</span>
           </span>
           <span class="app-arrow" aria-hidden="true">
             <DocIcon name="arrow" />
@@ -248,7 +296,7 @@ const langChips = ['简体中文', 'English', 'PC 端']
       <div v-else class="empty">
         <strong>{{ t('home.emptyTitle') }}</strong>
         <p>{{ t('home.emptyDesc') }}</p>
-        <button type="button" class="ghost-button" @click="query = ''">
+        <button type="button" class="ghost-button" @click="resetFilters">
           {{ t('home.clear') }}
         </button>
       </div>
@@ -275,69 +323,9 @@ const langChips = ['简体中文', 'English', 'PC 端']
       </div>
     </section>
 
-    <section id="legal" class="section">
-      <div class="legal-panel" data-reveal>
-        <div>
-          <span class="section-index">04 / {{ t('home.legalIndex') }}</span>
-          <h2>{{ t('home.legalTitle') }}</h2>
-          <p class="section-desc">{{ t('home.legalLead') }}</p>
-          <div class="hero-actions" style="margin: 24px 0 0">
-            <a class="btn btn-primary" :href="docPath(apps[0].slug, 'index', locale)">
-              {{ t('home.legalCta') }}
-              <DocIcon name="arrow" />
-            </a>
-          </div>
-          <p class="legal-note">{{ t('home.legalNote') }}</p>
-        </div>
-        <div class="legal-list">
-          <a
-            v-for="doc in ['privacy', 'terms', 'third-party', 'support'] as const"
-            :key="doc"
-            class="legal-row"
-            :href="docPath(apps[0].slug, doc, locale)"
-          >
-            <span class="legal-icon">
-              <DocIcon
-                :name="
-                  doc === 'privacy'
-                    ? 'shield'
-                    : doc === 'terms'
-                      ? 'file'
-                      : doc === 'third-party'
-                        ? 'package'
-                        : 'life'
-                "
-              />
-            </span>
-            <span>
-              <strong>{{ t(`nav.${doc}`) }}</strong>
-              <small>{{ t(`docDesc.${doc}`) }}</small>
-            </span>
-            <span class="app-arrow" aria-hidden="true"><DocIcon name="arrow" /></span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section id="compliance" class="section">
-      <div class="section-head" data-reveal>
-        <span class="section-index">05 / {{ t('home.complianceIndex') }}</span>
-        <h2>{{ t('home.complianceTitle') }}</h2>
-      </div>
-      <div class="compliance-card" data-reveal>
-        <p class="compliance-lead">{{ t('home.complianceLead') }}</p>
-        <ul class="check-list">
-          <li v-for="item in compliance" :key="item">
-            <DocIcon name="check" />
-            <span>{{ item }}</span>
-          </li>
-        </ul>
-      </div>
-    </section>
-
     <section id="faq" class="section">
       <div class="section-head" data-reveal>
-        <span class="section-index">06 / {{ t('home.faqIndex') }}</span>
+        <span class="section-index">04 / {{ t('home.faqIndex') }}</span>
         <h2>{{ t('home.faqTitle') }}</h2>
       </div>
       <div class="faq">

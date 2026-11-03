@@ -1,11 +1,11 @@
 # NASPK · UGOS Pro Apps
 
 Source of <https://ugosapps.naspk.com> — the product site for NASPK's UGOS Pro
-apps on UGREEN NAS, plus the compliance center behind every app listing. The
-landing page introduces the app suite (capabilities, catalog, install flow,
-compliance and FAQ), while each app keeps its own document directory (privacy
-policy, license agreement, third-party notices and support), in Chinese and
-English.
+apps on UGREEN NAS. The landing page is app-first: positioning, capabilities,
+the app catalog (filterable by category) and the install flow. Each app also
+keeps its own document directory (privacy policy, license agreement,
+third-party notices and support), in Chinese and English, for app-center
+listings.
 
 Lightweight on purpose: no marketing scripts, no remote fonts and no CDN —
 the whole site is static files.

@@ -145,7 +145,7 @@ await writePage(
     locale: 'en',
     title: 'NASPK · Apps for UGREEN NAS',
     description:
-      'A cloud drive suite developed and adapted by NASPK for UGREEN NAS, with per-app privacy policies, license agreements, third-party notices and support pages.',
+      'NASPK is an independent developer building apps for UGREEN NAS (UGOS Pro): cloud drive tools, domain and network management, with more app types on the way.',
     selfUrl: `${site}/en/index.html`,
     alternates: { zh: `${site}/`, en: `${site}/en/index.html` },
   }),

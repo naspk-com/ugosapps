@@ -24,8 +24,8 @@ const isHome = computed(() => route.value.kind === 'home')
 const sections = [
   { id: 'product', key: 'nav.product' },
   { id: 'apps', key: 'nav.apps' },
-  { id: 'legal', key: 'nav.legal' },
-  { id: 'compliance', key: 'nav.compliance' },
+  { id: 'install', key: 'nav.install' },
+  { id: 'faq', key: 'nav.faq' },
 ] as const
 </script>
 
