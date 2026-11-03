@@ -139,14 +139,13 @@ const pushUrl = (path, zhPath, enPath) => {
 
 /** Home pages: `/index.html` is produced by Vite itself, only `/en/index.html` is new. */
 urls.push({ loc: `${site}/`, zh: `${site}/`, en: `${site}/en/index.html` })
-
 await writePage(
   'en/index.html',
   renderPage({
     locale: 'en',
-    title: 'NASPK Legal & Privacy Center',
+    title: 'NASPK · Apps for UGREEN NAS',
     description:
-      'Legal and privacy center for NASPK UGOS Pro apps. Each app keeps its own privacy policy, license agreement, third-party notices and support pages.',
+      'A cloud drive suite developed and adapted by NASPK for UGREEN NAS, with per-app privacy policies, license agreements, third-party notices and support pages.',
     selfUrl: `${site}/en/index.html`,
     alternates: { zh: `${site}/`, en: `${site}/en/index.html` },
   }),

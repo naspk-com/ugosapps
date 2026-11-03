@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import SiteFooter from '@/components/SiteFooter.vue'
 import SiteHeader from '@/components/SiteHeader.vue'
@@ -58,11 +58,32 @@ watch(
     updateCanonical()
     updateTitle()
     window.scrollTo({ top: 0, behavior: 'auto' })
+    void nextTick(observeReveal)
   },
   { immediate: true },
 )
 
 watch([() => t('site.name'), app], updateTitle)
+
+let revealObserver: IntersectionObserver | null = null
+
+const observeReveal = (): void => {
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue
+          entry.target.classList.add('is-in')
+          revealObserver?.unobserve(entry.target)
+        }
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
+    )
+  }
+  document.querySelectorAll('[data-reveal]:not(.is-in)').forEach((element) => {
+    revealObserver?.observe(element)
+  })
+}
 
 const onClick = (event: MouseEvent): void => {
   if (
@@ -89,16 +110,19 @@ onMounted(() => {
   document.addEventListener('click', onClick)
   window.addEventListener('scroll', onScroll, { passive: true })
   onScroll()
+  observeReveal()
 })
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', onClick)
   window.removeEventListener('scroll', onScroll)
+  revealObserver?.disconnect()
 })
 </script>
 
 <template>
   <a class="skip-link" href="#main">{{ t('site.skip') }}</a>
+  <div class="aurora" aria-hidden="true" />
   <div
     v-if="isDoc"
     class="progress"

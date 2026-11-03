@@ -85,8 +85,7 @@ onBeforeUnmount(() => observer?.disconnect())
     </div>
 
     <section class="hero compact doc-hero">
-      <div class="hero-glow" aria-hidden="true" />
-      <p class="eyebrow"><span class="dot" />{{ page.eyebrow }}</p>
+      <p class="eyebrow">{{ page.eyebrow }}</p>
       <h1 class="hero-title">{{ page.title }}</h1>
       <p class="hero-lead" v-html="page.lead" />
       <p class="meta" v-html="page.meta" />

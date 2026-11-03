@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DocIcon from '@/components/DocIcon.vue'
-import { themeMode, cycleTheme } from '@/theme'
 import { docPath, homePath } from '@/i18n/docs'
 import { docIds } from '@/i18n/docs/types'
 import { route } from '@/router'
@@ -23,16 +22,25 @@ const langHref = computed(() => {
 
 const isHome = computed(() => route.value.kind === 'home')
 
-const docs = docIds
+const appSlug = computed(() =>
+  route.value.kind === 'app' || route.value.kind === 'doc' ? route.value.slug : '',
+)
 
-const themeTitle = computed(() => t(`theme.${themeMode.value}`))
+const activeDoc = computed(() => (route.value.kind === 'doc' ? route.value.doc : null))
+
+const sections = [
+  { id: 'product', key: 'nav.product' },
+  { id: 'apps', key: 'nav.apps' },
+  { id: 'legal', key: 'nav.legal' },
+  { id: 'compliance', key: 'nav.compliance' },
+] as const
 </script>
 
 <template>
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="brand" :href="homeHref">
-        <img class="brand-mark" src="/favicon.svg" alt="NASPK" width="38" height="38" />
+        <img class="brand-mark" src="/favicon.svg" alt="NASPK" width="34" height="34" />
         <span class="brand-text">
           <strong>NASPK</strong>
           <small>{{ t('site.brand') }}</small>
@@ -40,37 +48,29 @@ const themeTitle = computed(() => t(`theme.${themeMode.value}`))
       </a>
 
       <nav class="nav">
-        <template v-if="isHome">
-          <a href="#apps">{{ t('nav.apps') }}</a>
-          <a href="#compliance">{{ t('nav.compliance') }}</a>
-        </template>
-        <template v-else-if="route.kind === 'app' || route.kind === 'doc'">
+        <template v-if="appSlug">
           <a
-            v-for="doc in docs"
+            v-for="doc in docIds"
             :key="doc"
-            :href="docPath(route.slug, doc, route.locale)"
-            :class="{ active: route.kind === 'doc' && route.doc === doc }"
+            :href="docPath(appSlug, doc, route.locale)"
+            :class="{ active: activeDoc === doc }"
           >
             {{ t(`nav.${doc}`) }}
+          </a>
+        </template>
+        <template v-else>
+          <a
+            v-for="section in sections"
+            :key="section.id"
+            :href="isHome ? `#${section.id}` : `${homeHref}#${section.id}`"
+          >
+            {{ t(section.key) }}
           </a>
         </template>
       </nav>
 
       <div class="header-actions">
-        <button class="icon-button" type="button" :title="themeTitle" @click="cycleTheme">
-          <svg v-if="themeMode === 'auto'" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="7" />
-            <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" />
-          </svg>
-          <svg v-else-if="themeMode === 'light'" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="4.5" />
-            <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" />
-          </svg>
-          <svg v-else viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" />
-          </svg>
-          <span class="visually-hidden">{{ themeTitle }}</span>
-        </button>
+        <a v-if="!isHome" class="header-cta" :href="`${homeHref}#apps`">{{ t('nav.apps') }}</a>
         <a class="lang-switch" :href="langHref">
           <DocIcon name="globe" />
           {{ t('lang.switch') }}
