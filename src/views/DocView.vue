@@ -91,7 +91,7 @@ onBeforeUnmount(() => observer?.disconnect())
       <p class="meta" v-html="page.meta" />
     </section>
 
-    <div class="doc-layout">
+    <div class="doc-layout" :class="{ 'no-toc': !toc.length }">
       <aside v-if="toc.length" class="toc">
         <p class="toc-title">{{ t('doc.toc') }}</p>
         <a

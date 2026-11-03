@@ -41,7 +41,7 @@ export default {
     features: [
       {
         num: '01',
-        title: 'Native, not a web wrapper',
+        title: 'Native, not a Docker wrapper',
         desc: 'Distributed as .upk packages through the App Center; desktop icons, window management and gateway authentication all use native UGOS Pro capabilities.',
       },
       {

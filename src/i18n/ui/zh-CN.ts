@@ -41,7 +41,7 @@ export default {
     features: [
       {
         num: '01',
-        title: '原生应用，不是网页套壳',
+        title: '原生应用，不是Docker套壳',
         desc: '以 .upk 安装包上架应用中心，桌面图标、窗口管理与网关鉴权全部走 UGOS Pro 原生能力，打开就是系统应用的手感。',
       },
       {

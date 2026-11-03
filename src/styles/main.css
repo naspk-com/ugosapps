@@ -1383,6 +1383,10 @@ tbody tr:hover {
   padding: 36px 0 40px;
 }
 
+.doc-layout.no-toc {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .toc {
   position: sticky;
   top: calc(var(--header-h) + 22px);
