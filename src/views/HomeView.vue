@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DocIcon from '@/components/DocIcon.vue'
 import {
@@ -63,7 +63,57 @@ const unilink = computed(() => apps.find((app) => app.slug === 'unilink'))
 
 const heroApps = computed(() => apps.filter((app) => app.slug !== 'unilink'))
 const stackApps = computed(() => apps.slice(0, 6))
-const doubled = computed(() => [...apps, ...apps])
+
+const marqueeViewport = ref<HTMLElement | null>(null)
+const marqueeTrack = ref<HTMLElement | null>(null)
+const marqueeSets = ref(2)
+const marqueeStyle = ref<Record<string, string>>({})
+
+const marqueeItems = computed(() =>
+  Array.from({ length: marqueeSets.value * 2 }, (_, set) =>
+    apps.map((app) => ({ key: `${app.slug}-${set}`, app })),
+  ).flat(),
+)
+
+// 复制若干份应用列表，保证「一份」的宽度不短于视口，位移正好等于一份的宽度，循环处不会露出空白。
+const measureMarquee = async (): Promise<void> => {
+  const viewport = marqueeViewport.value
+  const track = marqueeTrack.value
+  if (!viewport || !track) return
+  const total = track.scrollWidth
+  if (total <= 0) return
+  const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0
+  const sets = marqueeSets.value
+  const period = (total + gap) / (sets * 2)
+  if (period <= 0) return
+  const copies = Math.max(2, Math.ceil(viewport.clientWidth / period) + 1)
+  if (copies > sets) {
+    marqueeSets.value = copies
+    await nextTick()
+    measureMarquee()
+    return
+  }
+  marqueeStyle.value = {
+    '--marquee-shift': `${period}px`,
+    animationDuration: `${Math.max(24, Math.round(period / 48))}s`,
+  }
+}
+
+let marqueeObserver: ResizeObserver | null = null
+
+onMounted(() => {
+  measureMarquee()
+  if (typeof ResizeObserver !== 'undefined') {
+    marqueeObserver = new ResizeObserver(() => measureMarquee())
+    if (marqueeViewport.value) marqueeObserver.observe(marqueeViewport.value)
+    if (marqueeTrack.value) marqueeObserver.observe(marqueeTrack.value)
+  }
+})
+
+onBeforeUnmount(() => {
+  marqueeObserver?.disconnect()
+  marqueeObserver = null
+})
 
 const orbStyle = (index: number): Record<string, string> => {
   const total = heroApps.value.length
@@ -146,11 +196,11 @@ const resetFilters = (): void => {
   </div>
 
   <div class="marquee" aria-hidden="true">
-    <div class="marquee-viewport">
-      <div class="marquee-track">
-        <span v-for="(app, index) in doubled" :key="`${app.slug}-${index}`" class="marquee-item">
-          <img :src="app.icon" alt="" width="22" height="22" loading="lazy" decoding="async" />
-          {{ nameOf(app) }}
+    <div ref="marqueeViewport" class="marquee-viewport">
+      <div ref="marqueeTrack" class="marquee-track" :style="marqueeStyle">
+        <span v-for="item in marqueeItems" :key="item.key" class="marquee-item">
+          <img :src="item.app.icon" alt="" width="22" height="22" loading="lazy" decoding="async" />
+          {{ nameOf(item.app) }}
         </span>
       </div>
     </div>

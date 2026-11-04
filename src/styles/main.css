@@ -22,10 +22,9 @@
   --radius: 22px;
   --radius-sm: 14px;
   --max: 1440px;
-  --font-sans: 'Segoe UI Variable Text', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei UI',
-    'Microsoft YaHei', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  --font-display: 'Segoe UI Variable Display', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei UI',
-    'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+  --font-sans: 'MiSans', 'Inter Variable', -apple-system, BlinkMacSystemFont, 'PingFang SC',
+    'Noto Sans SC', 'Microsoft YaHei', 'PingFang TC', 'Noto Sans TC', 'Helvetica Neue', sans-serif;
+  --font-display: 'TsangerYuYangT', 'Songti SC', 'Noto Serif SC', 'SimSun', Georgia, serif;
   --font-mono: ui-monospace, 'Cascadia Mono', 'SFMono-Regular', 'JetBrains Mono', Consolas, monospace;
   --header-h: 70px;
   --shadow: 0 24px 60px -32px rgba(0, 0, 0, 0.85);
@@ -83,9 +82,9 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.18;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
 }
 
 /* ---------- ambience ---------- */
@@ -363,9 +362,9 @@ body::before {
 .hero-title {
   margin: 0 0 22px;
   font-size: clamp(2.5rem, 5.4vw, 4.1rem);
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: 0.01em;
+  font-weight: 600;
 }
 
 .hero.compact .hero-title {
@@ -429,8 +428,8 @@ body::before {
 
 .stat strong {
   font-size: 1.7rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  letter-spacing: 0;
   line-height: 1.1;
 }
 
@@ -574,6 +573,7 @@ body::before {
   align-items: center;
   gap: 38px;
   width: max-content;
+  will-change: transform;
   animation: marquee 42s linear infinite;
 }
 
@@ -595,7 +595,7 @@ body::before {
 
 @keyframes marquee {
   to {
-    transform: translateX(-50%);
+    transform: translateX(calc(-1 * var(--marquee-shift, 50%)));
   }
 }
 
@@ -644,7 +644,7 @@ body::before {
 .section-head h2 {
   margin: 0;
   font-size: clamp(1.75rem, 3.2vw, 2.5rem);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .section-desc {
@@ -717,7 +717,7 @@ body::before {
 .bento-card h3 {
   margin: 0;
   font-size: 1.14rem;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .bento-card p {
@@ -1022,7 +1022,7 @@ body::before {
 .step h3 {
   margin: 0 0 8px;
   font-size: 1.05rem;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .step p {
@@ -1047,8 +1047,13 @@ body::before {
 
 .faq {
   display: grid;
-  gap: 10px;
-  max-width: 880px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.faq details:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
 
 .faq details {
@@ -1386,12 +1391,16 @@ tbody tr:hover {
 
 /* ---------- document layout ---------- */
 
+.doc-page {
+  max-width: 1136px;
+}
+
 .doc-layout {
   display: grid;
-  grid-template-columns: 236px minmax(0, 1fr);
-  gap: 56px;
+  grid-template-columns: 224px minmax(0, 1fr);
+  gap: 48px;
   align-items: start;
-  padding: 36px 0 40px;
+  padding: 32px 0 40px;
 }
 
 .doc-layout.no-toc {
@@ -1435,7 +1444,7 @@ tbody tr:hover {
 }
 
 .prose {
-  max-width: 800px;
+  max-width: 768px;
   min-width: 0;
   color: var(--text-soft);
   font-size: 0.98rem;
@@ -1449,7 +1458,7 @@ tbody tr:hover {
 .doc-section h2 {
   margin: 42px 0 14px;
   font-size: 1.24rem;
-  letter-spacing: -0.025em;
+  letter-spacing: 0;
   color: var(--text);
 }
 
@@ -1873,6 +1882,10 @@ tbody tr:hover {
   }
 
   .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .faq {
     grid-template-columns: 1fr;
   }
 

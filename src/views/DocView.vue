@@ -64,7 +64,7 @@ onBeforeUnmount(() => observer?.disconnect())
 </script>
 
 <template>
-  <div v-if="app && page" class="wrap">
+  <div v-if="app && page" class="wrap doc-page">
     <nav class="crumbs" :aria-label="t('nav.home')">
       <a :href="homePath(locale)">{{ t('nav.home') }}</a>
       <span aria-hidden="true">/</span>
