@@ -503,8 +503,344 @@ const unilinkSupport = (app: AppInfo): DocPage => ({
   ],
 })
 
+// Cloudflare Tunnel 是内网穿透工具，不处理文件与相册，文档单独编写。
+const cftunnelPrivacy = (app: AppInfo): DocPage => ({
+  eyebrow: 'Privacy Policy',
+  title: '隐私政策',
+  lead: `本政策适用于${app.name.zh}（<span class="mono">${app.id}</span>）。这是一款运行在你自有 NAS 上的 Cloudflare Tunnel 管理工具，开发者不运营中转服务器，也不代理你的流量。`,
+  meta: `生效日期：${UPDATED}　·　最近更新：${UPDATED}`,
+  sections: [
+    {
+      id: 'scope',
+      title: '1. 适用范围',
+      blocks: [
+        {
+          kind: 'text',
+          html: `本政策适用于${app.name.zh}（<span class="mono">${app.id}</span>）。应用运行在用户自有的绿联 NAS（UGOS Pro）上，Tunnel 配置、Cloudflare 凭据与运行日志都保存在这台设备内。其他 com.naspk.* 应用适用各自目录下的政策，可在<a href="/index.html">法律中心首页</a>查看。`,
+        },
+      ],
+    },
+    {
+      id: 'data',
+      title: '2. 我们处理的信息',
+      blocks: [
+        {
+          kind: 'text',
+          html: '<h3>2.1 Cloudflare 凭据</h3><p>为创建与管理 Tunnel、读取域名列表并写入 DNS 记录，你需要在应用内填写 Cloudflare API Token；部分流程还会生成或粘贴 Tunnel Token。凭据仅保存在你的 NAS 应用数据目录，文件权限限制为仅应用账号可读，日志不会输出完整 Token。开发者不会收到、上传或代为保管这些凭据。</p>',
+        },
+        {
+          kind: 'text',
+          html: '<h3>2.2 Tunnel 与 DNS 数据</h3><p>应用通过 Cloudflare 官方 API 读取账号下的 Tunnel 列表、连接状态、远端 ingress 规则、域名与解析记录，并在本机保存必要的配置缓存用于展示与恢复。上述数据不会上传至开发者服务器。</p>',
+        },
+        {
+          kind: 'text',
+          html: '<h3>2.3 运行日志</h3><p>应用在本机保存 Tunnel 启停记录、cloudflared 输出与错误信息，用于故障排查。日志可能包含时间、连接器 ID、错误码与主机名；日志不会自动上传，你可以在应用内查看或清空。</p>',
+        },
+        { kind: 'text', html: '<h3>2.4 我们不收集的信息</h3>' },
+        {
+          kind: 'list',
+          items: [
+            '不读取、不上传你通过 Tunnel 暴露的网站内容与访问日志；',
+            '不收集设备唯一标识、位置、通讯录或使用行为统计；',
+            '不集成广告、统计分析或推送 SDK；',
+            '不向任何第三方出售、出租或交换你的数据。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'perm',
+      title: '3. 权限与系统能力',
+      blocks: [
+        {
+          kind: 'text',
+          html: '应用申请联网权限（<span class="mono">NETWORK.ACCESS_INTERNET</span>）以访问 Cloudflare API 与 Tunnel 边缘节点；系统命令执行能力（<span class="mono">SYSTEM.EXEC_SYSTEM_COMMAND</span>）仅用于由系统拉起启动脚本，应用不会执行其他外部命令。应用以普通应用账号运行，不申请 root 权限，也不修改系统网络参数。',
+        },
+      ],
+    },
+    {
+      id: 'storage',
+      title: '4. 存储位置与保留期限',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['内容', '位置', '卸载时'],
+          rows: [
+            ['Cloudflare 凭据与 Tunnel 配置', '应用数据目录', '随应用数据一并删除'],
+            ['Tunnel 与 DNS 缓存', '应用数据目录', '一并删除'],
+            ['运行日志', '应用日志目录', '一并删除'],
+          ],
+        },
+        {
+          kind: 'text',
+          html: '配置保留至你删除对应凭据或卸载应用为止。卸载前如需保留配置，请自行备份应用数据目录；升级安装不会清空已有数据。',
+        },
+      ],
+    },
+    {
+      id: 'share',
+      title: '5. 共享与第三方',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '<strong>Cloudflare：</strong>应用通过其官方 API 管理 Tunnel 与 DNS 记录，网络流量由 Cloudflare 边缘节点转发，同时受其隐私政策与服务条款约束。',
+            '<strong>cloudflared：</strong>随应用内置 Cloudflare 官方开源客户端，仅与 Cloudflare 边缘节点通信。',
+            '<strong>开发者：</strong>不接收上述任何数据；仅在排障时由你主动提供的日志片段才会被知悉。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'rights',
+      title: '6. 你的选择',
+      blocks: [
+        {
+          kind: 'text',
+          html: '你可以随时在应用内修改或删除 Cloudflare 凭据、停止 Tunnel，或卸载应用以清除本机数据；也可以在 Cloudflare 控制台撤销对应 API Token，使其立即失效。',
+        },
+      ],
+    },
+  ],
+})
+
+const cftunnelTerms = (app: AppInfo): DocPage => ({
+  eyebrow: 'License Agreement',
+  title: '用户许可协议',
+  lead: `本协议是你与 NASPK 应用开发者之间就使用${app.name.zh}（<span class="mono">${app.id}</span>）达成的法律协议。安装或使用本应用即表示你已阅读并同意本协议。`,
+  meta: `生效日期：${UPDATED}　·　最近更新：${UPDATED}`,
+  sections: [
+    {
+      id: 'grant',
+      title: '1. 许可授予',
+      blocks: [
+        {
+          kind: 'text',
+          html: '开发者授予你一项非独占、不可转让、不可再许可的许可，允许你在自有或有权管理的绿联 NAS 设备上安装并使用本应用，用于管理你自己的 Cloudflare 账号与域名。',
+        },
+      ],
+    },
+    {
+      id: 'limits',
+      title: '2. 使用限制',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '不得对本应用进行反向工程、反编译、拆解或修改，不得移除版权与许可声明；',
+            '不得将本应用或其修改版本用于商业再分发、出租、出售或提供付费代管服务；',
+            '不得使用本应用绕过 Cloudflare 服务条款、滥用免费额度或从事违法活动；',
+            '不得通过 Tunnel 暴露违反所在地法律法规的内容或服务。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'third',
+      title: '3. 第三方服务与账号',
+      blocks: [
+        {
+          kind: 'text',
+          html: '本应用依赖 Cloudflare 提供的 Tunnel、DNS 与 API 服务，并内置其官方开源客户端 cloudflared。你需要自行注册 Cloudflare 账号、准备域名并遵守其服务条款与合理使用政策。Cloudflare 的服务可用性、免费额度、区域限制与接口变更不由开发者控制。',
+        },
+      ],
+    },
+    {
+      id: 'availability',
+      title: '4. 可用性与变更',
+      blocks: [
+        {
+          kind: 'text',
+          html: '开发者会尽力维护应用与 Cloudflare 接口的兼容性，并可能通过版本更新调整功能、内置组件版本或界面。因上游接口调整、账号权限不足、网络环境限制或设备故障导致的功能不可用，开发者不承担赔偿责任。',
+        },
+      ],
+    },
+    {
+      id: 'warranty',
+      title: '5. 免责与责任限制',
+      blocks: [
+        {
+          kind: 'text',
+          html: '本应用按「现状」提供，不附带任何明示或默示担保。因使用或无法使用本应用导致的访客流量中断、DNS 记录变更、数据丢失或间接损失，开发者不承担责任；在法律允许的最大范围内，开发者的累计责任不超过你为该应用实际支付的费用。',
+        },
+      ],
+    },
+    {
+      id: 'change',
+      title: '6. 协议变更与终止',
+      blocks: [
+        {
+          kind: 'text',
+          html: '开发者可能随版本更新调整本协议，更新后的协议随应用或法律中心页面公布。你若在更新后继续使用，视为接受新协议；不同意时可停止使用并卸载应用。你违反本协议时，许可自动终止。',
+        },
+      ],
+    },
+  ],
+})
+
+const cftunnelThirdParty = (app: AppInfo): DocPage => ({
+  eyebrow: 'Third-Party Notices',
+  title: '第三方组件与许可',
+  lead: `本页列出${app.name.zh}使用的云服务、开源组件与第三方组件。应用本身为闭源软件，不提供源代码地址；下列组件仍归其权利人所有，并适用各自许可。`,
+  meta: `生效日期：${UPDATED}　·　最近更新：${UPDATED}`,
+  sections: [
+    {
+      id: 'cloudflare',
+      title: '1. Cloudflare 服务',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['服务', '用途', '条款'],
+          rows: [
+            ['Cloudflare Tunnel', '建立出站连接并将公网请求转发到 NAS', 'Cloudflare 服务条款'],
+            ['Cloudflare API', '管理 Tunnel、ingress 规则与 DNS 记录', 'Cloudflare API 使用条款'],
+            ['Cloudflare DNS', '为隧道创建或更新 CNAME 记录', 'Cloudflare 服务条款'],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'cloudflared',
+      title: '2. cloudflared',
+      blocks: [
+        {
+          kind: 'text',
+          html: '应用内置 Cloudflare 官方开源客户端 <span class="mono">cloudflared</span>，以独立二进制的形式随安装包分发，按 CPU 架构分别放置。该组件遵循 Apache License 2.0，版权归 Cloudflare, Inc. 所有；其源代码可在 Cloudflare 官方仓库获取，许可全文随二进制一同提供。',
+        },
+        { kind: 'notice', html: 'cloudflared 由 Cloudflare 维护，不属于本应用的闭源部分；本应用仅负责其进程启停与日志展示。' },
+      ],
+    },
+    {
+      id: 'oss',
+      title: '3. 开源组件',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['组件', '用途', '许可'],
+          rows: [
+            ['Go 标准库与第三方库', '后端服务与 Cloudflare API 调用', 'BSD-3-Clause / MIT'],
+            ['Vue 3', '前端界面', 'MIT'],
+            ['Vite 与构建工具链', '前端构建', 'MIT'],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'proprietary',
+      title: '4. 专有部分',
+      blocks: [
+        {
+          kind: 'text',
+          html: '应用后端服务、前端业务页面、图标与文案为开发者专有，受著作权法保护。除本协议明确授予的权利外，不授予其他权利。',
+        },
+      ],
+    },
+    {
+      id: 'trademark',
+      title: '5. 商标',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'Cloudflare、cloudflared 及相关标识为 Cloudflare, Inc. 的商标。本应用与 Cloudflare 无隶属或背书关系，名称仅用于说明所连接的服务。',
+        },
+      ],
+    },
+  ],
+})
+
+const cftunnelSupport = (app: AppInfo): DocPage => ({
+  eyebrow: 'Support',
+  title: '技术支持',
+  lead: `本页汇总${app.name.zh}（<span class="mono">${app.id}</span>）最常见的配置与故障处理方式。完整使用文档请访问 <a href="https://tunnel.naspk.com/" target="_blank" rel="noopener">tunnel.naspk.com</a>。`,
+  meta: `生效日期：${UPDATED}　·　最近更新：${UPDATED}`,
+  sections: [
+    {
+      id: 'prepare',
+      title: '1. 使用前准备',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '一个 Cloudflare 账号，且域名已由 Cloudflare 托管（NS 已切换）；',
+            '确定要从公网访问的 NAS 服务地址与端口；',
+            '具备创建 API Token 的账号权限。',
+          ],
+        },
+        {
+          kind: 'text',
+          html: '详细的账号准备、Token 权限与首个 Tunnel 的创建步骤见 <a href="https://tunnel.naspk.com/" target="_blank" rel="noopener">tunnel.naspk.com</a>。',
+        },
+      ],
+    },
+    {
+      id: 'token',
+      title: '2. 配置 Cloudflare API Token',
+      blocks: [
+        {
+          kind: 'text',
+          html: '在 Cloudflare 控制台创建 API Token，至少包含：账号级 <span class="mono">Cloudflare Tunnel</span> 编辑权限、区域级 <span class="mono">DNS</span> 编辑权限与 <span class="mono">Zone</span> 读取权限，并把范围限制到需要使用的账号与域名。填写后点击「测试连接」，返回账号与 Tunnel 数量即表示配置正确。',
+        },
+        { kind: 'notice', html: 'Token 只保存在你的 NAS 上。若怀疑泄露，请立即在 Cloudflare 控制台撤销该 Token，再在应用中重新绑定。' },
+      ],
+    },
+    {
+      id: 'run',
+      title: '3. 创建与运行 Tunnel',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '在「Tunnel 列表」新建 Tunnel，名称可用小写字母、数字与连字符；',
+            '为 Tunnel 配置 ingress 规则，指向 NAS 上的实际服务地址（如 <span class="mono">http://127.0.0.1:8080</span>）；',
+            '启动后「运行状态」显示已连接，且日志中出现已注册的连接器；',
+            '需要随 NAS 开机自动连接时，在系统配置中开启自动启动。',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'dns',
+      title: '4. 域名与 DNS 记录',
+      blocks: [
+        {
+          kind: 'text',
+          html: '为 Tunnel 添加自定义域名时，应用会创建指向 <span class="mono">&lt;tunnel-id&gt;.cfargotunnel.com</span> 的 CNAME 记录。若记录已存在，请先确认其未被其他服务占用；解析生效时间受 Cloudflare 与本地 DNS 缓存影响。',
+        },
+      ],
+    },
+    {
+      id: 'faq',
+      title: '5. 常见问题排查',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['现象', '排查方向'],
+          rows: [
+            ['测试连接失败', 'Token 权限不足、已被撤销，或账号 ID 填写错误'],
+            ['Tunnel 启动后未连接', 'NAS 无法访问外网、DNS 解析异常，或上游限制 UDP；可在设置中切换 http2 协议重试'],
+            ['域名访问 502', 'ingress 指向的服务未启动，或地址端口填写错误'],
+            ['访问提示 1033', 'Tunnel 已创建但连接器未上线，检查运行状态与日志'],
+            ['重启后未自动连接', '未开启自动启动，或启动时外网尚未就绪'],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'help',
+      title: '6. 获取帮助',
+      blocks: [
+        {
+          kind: 'text',
+          html: '排查前请先在应用内「运行日志」复制出错时间段的内容。完整文档、示例配置与更新说明见 <a href="https://tunnel.naspk.com/" target="_blank" rel="noopener">tunnel.naspk.com</a>；也可通过开发者官网联系我们。',
+        },
+      ],
+    },
+  ],
+})
+
 const privacy = (app: AppInfo): DocPage => {
   if (app.domainTool) return unilinkPrivacy(app)
+  if (app.tunnelTool) return cftunnelPrivacy(app)
   const name = app.name.zh
   const id = app.id
 
@@ -668,7 +1004,8 @@ const privacy = (app: AppInfo): DocPage => {
   }
 }
 
-const terms = (app: AppInfo): DocPage => app.domainTool ? unilinkTerms(app) : ({
+const terms = (app: AppInfo): DocPage =>
+  app.domainTool ? unilinkTerms(app) : app.tunnelTool ? cftunnelTerms(app) : ({
   eyebrow: 'License Agreement',
   title: '用户许可协议',
   lead: `本协议是你与 NASPK 应用开发者之间就使用${app.name.zh}（<span class="mono">${app.id}</span>）达成的法律协议。安装或使用本应用即表示你已阅读并同意本协议。`,
@@ -798,7 +1135,8 @@ const terms = (app: AppInfo): DocPage => app.domainTool ? unilinkTerms(app) : ({
   ],
 })
 
-const thirdParty = (app: AppInfo): DocPage => app.domainTool ? unilinkThirdParty(app) : ({
+const thirdParty = (app: AppInfo): DocPage =>
+  app.domainTool ? unilinkThirdParty(app) : app.tunnelTool ? cftunnelThirdParty(app) : ({
   eyebrow: 'Third-Party Notices',
   title: '第三方组件与许可',
   lead: `本页列出${app.name.zh}连接的云服务、使用的开源组件与第三方专有组件。应用本身为闭源软件，不提供源代码地址；下列组件仍归其权利人所有，并适用各自许可。`,
@@ -875,7 +1213,8 @@ const thirdParty = (app: AppInfo): DocPage => app.domainTool ? unilinkThirdParty
   ],
 })
 
-const support = (app: AppInfo): DocPage => app.domainTool ? unilinkSupport(app) : ({
+const support = (app: AppInfo): DocPage =>
+  app.domainTool ? unilinkSupport(app) : app.tunnelTool ? cftunnelSupport(app) : ({
   eyebrow: 'Support',
   title: '技术支持',
   lead: `本页汇总${app.name.zh}（<span class="mono">${app.id}</span>）最常见的配置与故障处理方式。应用为闭源软件，不提供源代码仓库或公开的 issue 跟踪地址，请通过开发者官网联系我们。`,

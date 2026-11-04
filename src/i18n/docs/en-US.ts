@@ -503,8 +503,345 @@ const unilinkSupport = (app: AppInfo): DocPage => ({
   ],
 })
 
+// Cloudflare Tunnel is a network exposure tool that never touches files or photos,
+// so it gets its own document set.
+const cftunnelPrivacy = (app: AppInfo): DocPage => ({
+  eyebrow: 'Privacy Policy',
+  title: 'Privacy Policy',
+  lead: `This policy covers ${app.name.en} (<span class="mono">${app.id}</span>). It is a Cloudflare Tunnel management tool that runs on your own NAS; the developer does not operate any relay server or proxy your traffic.`,
+  meta: `Effective: ${UPDATED}　·　Last updated: ${UPDATED}`,
+  sections: [
+    {
+      id: 'scope',
+      title: '1. Scope',
+      blocks: [
+        {
+          kind: 'text',
+          html: `This policy covers ${app.name.en} (<span class="mono">${app.id}</span>). The app runs on a UGREEN NAS (UGOS Pro) owned by you; tunnel configuration, Cloudflare credentials and logs stay on that device. Other com.naspk.* apps are covered by the policy in their own directory, listed on the <a href="/en/index.html">legal center home</a>.`,
+        },
+      ],
+    },
+    {
+      id: 'data',
+      title: '2. Information we process',
+      blocks: [
+        {
+          kind: 'text',
+          html: '<h3>2.1 Cloudflare credentials</h3><p>To create and manage tunnels, read your zones and write DNS records, you provide a Cloudflare API token; some flows also generate or accept a tunnel token. Credentials are stored only in the app data directory on your NAS, readable by the app account alone, and full tokens are never written to logs. The developer never receives, uploads or stores them on your behalf.</p>',
+        },
+        {
+          kind: 'text',
+          html: '<h3>2.2 Tunnel and DNS data</h3><p>The app reads the tunnel list, connector status, remote ingress rules, zones and DNS records through the official Cloudflare API and keeps a local cache for display and recovery. None of it is uploaded to the developer.</p>',
+        },
+        {
+          kind: 'text',
+          html: '<h3>2.3 Runtime logs</h3><p>Start and stop events, cloudflared output and errors are written locally for troubleshooting. Logs may contain timestamps, connector IDs, error codes and hostnames; they are never uploaded automatically and can be reviewed or cleared in the app.</p>',
+        },
+        { kind: 'text', html: '<h3>2.4 What we do not collect</h3>' },
+        {
+          kind: 'list',
+          items: [
+            'We do not read or upload the content or access logs of sites you expose through the tunnel;',
+            'We do not collect device identifiers, location, contacts or usage analytics;',
+            'No advertising, analytics or push SDKs are bundled;',
+            'Your data is never sold, rented or exchanged with third parties.',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'perm',
+      title: '3. Permissions and system access',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'The app requests internet access (<span class="mono">NETWORK.ACCESS_INTERNET</span>) to reach the Cloudflare API and tunnel edge nodes; the system command permission (<span class="mono">SYSTEM.EXEC_SYSTEM_COMMAND</span>) is used only so the system can launch the start script. The app runs as a normal app account, does not request root and does not change system network parameters.',
+        },
+      ],
+    },
+    {
+      id: 'storage',
+      title: '4. Where data lives and how long it is kept',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['Content', 'Location', 'On uninstall'],
+          rows: [
+            ['Cloudflare credentials and tunnel settings', 'App data directory', 'Deleted with app data'],
+            ['Tunnel and DNS cache', 'App data directory', 'Deleted'],
+            ['Runtime logs', 'App log directory', 'Deleted'],
+          ],
+        },
+        {
+          kind: 'text',
+          html: 'Settings are kept until you remove the credentials or uninstall the app. Back up the app data directory before uninstalling if you want to keep them; upgrades never clear existing data.',
+        },
+      ],
+    },
+    {
+      id: 'share',
+      title: '5. Sharing and third parties',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            '<strong>Cloudflare:</strong> tunnels and DNS records are managed through its official API, and traffic is forwarded by Cloudflare edge nodes under its own privacy policy and terms.',
+            '<strong>cloudflared:</strong> the bundled official Cloudflare open-source client only talks to Cloudflare edge nodes.',
+            '<strong>The developer:</strong> receives none of the above; only log excerpts you choose to share during troubleshooting are seen.',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'rights',
+      title: '6. Your choices',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'You can edit or delete the Cloudflare credentials, stop a tunnel, or uninstall the app to erase local data at any time. You can also revoke the API token in the Cloudflare dashboard, which takes effect immediately.',
+        },
+      ],
+    },
+  ],
+})
+
+const cftunnelTerms = (app: AppInfo): DocPage => ({
+  eyebrow: 'License Agreement',
+  title: 'License Agreement',
+  lead: `This agreement is between you and the NASPK app developer and governs your use of ${app.name.en} (<span class="mono">${app.id}</span>). Installing or using the app means you have read and accept this agreement.`,
+  meta: `Effective: ${UPDATED}　·　Last updated: ${UPDATED}`,
+  sections: [
+    {
+      id: 'grant',
+      title: '1. License grant',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'The developer grants you a non-exclusive, non-transferable, non-sublicensable license to install and use this app on UGREEN NAS devices you own or manage, to manage your own Cloudflare account and domains.',
+        },
+      ],
+    },
+    {
+      id: 'limits',
+      title: '2. Restrictions',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            'Do not reverse engineer, decompile, disassemble or modify the app, or remove copyright and license notices;',
+            'Do not redistribute, rent, sell or offer paid hosting services built on the app or modified versions of it;',
+            'Do not use the app to circumvent Cloudflare terms, abuse free quotas or engage in unlawful activity;',
+            'Do not expose content or services through the tunnel that violate applicable law.',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'third',
+      title: '3. Third-party services and accounts',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'The app depends on Cloudflare Tunnel, DNS and API services and bundles Cloudflare\'s official open-source client cloudflared. You are responsible for registering a Cloudflare account, owning the domain and following its terms and acceptable use policy. Availability, free quotas, regional limits and API changes are outside the developer\'s control.',
+        },
+      ],
+    },
+    {
+      id: 'availability',
+      title: '4. Availability and changes',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'The developer aims to keep the app compatible with Cloudflare APIs and may adjust features, bundled component versions or the interface in releases. The developer is not liable for failures caused by upstream API changes, insufficient account permissions, network restrictions or device faults.',
+        },
+      ],
+    },
+    {
+      id: 'warranty',
+      title: '5. Disclaimer and limitation of liability',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'The app is provided "as is" without warranties of any kind. The developer is not liable for visitor downtime, DNS record changes, data loss or indirect damages arising from use of, or inability to use, the app. To the maximum extent permitted by law, total liability will not exceed the amount you actually paid for the app.',
+        },
+      ],
+    },
+    {
+      id: 'change',
+      title: '6. Changes and termination',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'The developer may update this agreement with new releases; the updated version is published with the app or on the legal center site. Continued use after an update means you accept it; if not, stop using the app and uninstall it. The license terminates automatically if you breach this agreement.',
+        },
+      ],
+    },
+  ],
+})
+
+const cftunnelThirdParty = (app: AppInfo): DocPage => ({
+  eyebrow: 'Third-Party Notices',
+  title: 'Third-Party Components and Licenses',
+  lead: `This page lists the cloud services, open-source components and third-party components used by ${app.name.en}. The app itself is closed-source software with no source code address; the components below remain owned by their rights holders under their respective licenses.`,
+  meta: `Effective: ${UPDATED}　·　Last updated: ${UPDATED}`,
+  sections: [
+    {
+      id: 'cloudflare',
+      title: '1. Cloudflare services',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['Service', 'Purpose', 'Terms'],
+          rows: [
+            ['Cloudflare Tunnel', 'Outbound connector that forwards public requests to the NAS', 'Cloudflare Terms of Service'],
+            ['Cloudflare API', 'Manage tunnels, ingress rules and DNS records', 'Cloudflare API terms'],
+            ['Cloudflare DNS', 'Create or update CNAME records for the tunnel', 'Cloudflare Terms of Service'],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'cloudflared',
+      title: '2. cloudflared',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'The app bundles Cloudflare\'s official open-source client <span class="mono">cloudflared</span> as a separate binary per CPU architecture. It is licensed under the Apache License 2.0, copyright Cloudflare, Inc.; its source code is available from the official Cloudflare repository and the full license text ships with the binary.',
+        },
+        { kind: 'notice', html: 'cloudflared is maintained by Cloudflare and is not part of the closed-source app; the app only starts and stops the process and shows its logs.' },
+      ],
+    },
+    {
+      id: 'oss',
+      title: '3. Open-source components',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['Component', 'Purpose', 'License'],
+          rows: [
+            ['Go standard library and third-party modules', 'Backend service and Cloudflare API calls', 'BSD-3-Clause / MIT'],
+            ['Vue 3', 'Frontend interface', 'MIT'],
+            ['Vite and build toolchain', 'Frontend build', 'MIT'],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'proprietary',
+      title: '4. Proprietary parts',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'The backend service, frontend business pages, icons and copy are proprietary to the developer and protected by copyright. No rights are granted beyond those stated in the license agreement.',
+        },
+      ],
+    },
+    {
+      id: 'trademark',
+      title: '5. Trademarks',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'Cloudflare, cloudflared and related marks belong to Cloudflare, Inc. This app is not affiliated with or endorsed by Cloudflare; the names are used only to describe the connected service.',
+        },
+      ],
+    },
+  ],
+})
+
+const cftunnelSupport = (app: AppInfo): DocPage => ({
+  eyebrow: 'Support',
+  title: 'Support',
+  lead: `This page covers the most common setup and troubleshooting steps for ${app.name.en} (<span class="mono">${app.id}</span>). Full documentation lives at <a href="https://tunnel.naspk.com/" target="_blank" rel="noopener">tunnel.naspk.com</a>.`,
+  meta: `Effective: ${UPDATED}　·　Last updated: ${UPDATED}`,
+  sections: [
+    {
+      id: 'prepare',
+      title: '1. Before you start',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            'A Cloudflare account with the domain already using Cloudflare nameservers;',
+            'The NAS service address and port you want to expose;',
+            'Account permission to create API tokens.',
+          ],
+        },
+        {
+          kind: 'text',
+          html: 'Account setup, token permissions and creating your first tunnel are documented at <a href="https://tunnel.naspk.com/" target="_blank" rel="noopener">tunnel.naspk.com</a>.',
+        },
+      ],
+    },
+    {
+      id: 'token',
+      title: '2. Cloudflare API token',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'Create an API token in the Cloudflare dashboard with at least account-level <span class="mono">Cloudflare Tunnel</span> edit, zone-level <span class="mono">DNS</span> edit and <span class="mono">Zone</span> read permissions, scoped to the account and domains you use. Click "Test connection"; an account name and tunnel count mean the token works.',
+        },
+        { kind: 'notice', html: 'The token stays on your NAS. If you suspect a leak, revoke it in the Cloudflare dashboard immediately and bind a new one in the app.' },
+      ],
+    },
+    {
+      id: 'run',
+      title: '3. Create and run a tunnel',
+      blocks: [
+        {
+          kind: 'list',
+          items: [
+            'Create a tunnel under "Tunnels"; names may use lowercase letters, digits and hyphens;',
+            'Configure ingress rules pointing at the real local service, e.g. <span class="mono">http://127.0.0.1:8080</span>;',
+            'After starting, the status shows connected and a connector appears in the logs;',
+            'Enable auto start in system settings to reconnect after the NAS reboots.',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'dns',
+      title: '4. Domains and DNS records',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'Adding a custom hostname creates a CNAME record pointing to <span class="mono">&lt;tunnel-id&gt;.cfargotunnel.com</span>. If a record already exists, make sure it is not used by another service; propagation depends on Cloudflare and local DNS caches.',
+        },
+      ],
+    },
+    {
+      id: 'faq',
+      title: '5. Troubleshooting',
+      blocks: [
+        {
+          kind: 'table',
+          head: ['Symptom', 'What to check'],
+          rows: [
+            ['Connection test fails', 'Missing or revoked token permissions, or a wrong account ID'],
+            ['Tunnel starts but stays disconnected', 'NAS cannot reach the internet, DNS resolution fails, or UDP is restricted; switch to http2 in settings and retry'],
+            ['Hostname returns 502', 'The local service behind the ingress rule is down, or the address and port are wrong'],
+            ['Error 1033 when visiting', 'The tunnel exists but no connector is online; check status and logs'],
+            ['No reconnect after reboot', 'Auto start is off, or the network was not ready at boot'],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'help',
+      title: '6. Getting help',
+      blocks: [
+        {
+          kind: 'text',
+          html: 'Before asking for help, copy the relevant time range from the "Logs" page. Full documentation, sample configurations and release notes are at <a href="https://tunnel.naspk.com/" target="_blank" rel="noopener">tunnel.naspk.com</a>; you can also reach us through the developer website.',
+        },
+      ],
+    },
+  ],
+})
+
 const privacy = (app: AppInfo): DocPage => {
   if (app.domainTool) return unilinkPrivacy(app)
+  if (app.tunnelTool) return cftunnelPrivacy(app)
   const name = app.name.en
   const id = app.id
 
@@ -665,7 +1002,8 @@ const privacy = (app: AppInfo): DocPage => {
   }
 }
 
-const terms = (app: AppInfo): DocPage => app.domainTool ? unilinkTerms(app) : ({
+const terms = (app: AppInfo): DocPage =>
+  app.domainTool ? unilinkTerms(app) : app.tunnelTool ? cftunnelTerms(app) : ({
   eyebrow: 'License Agreement',
   title: 'License Agreement',
   lead: `This agreement is between you and the NASPK app developer and governs your use of ${app.name.en} (<span class="mono">${app.id}</span>). Installing or using the app means you have read and accept this agreement.`,
@@ -795,7 +1133,8 @@ const terms = (app: AppInfo): DocPage => app.domainTool ? unilinkTerms(app) : ({
   ],
 })
 
-const thirdParty = (app: AppInfo): DocPage => app.domainTool ? unilinkThirdParty(app) : ({
+const thirdParty = (app: AppInfo): DocPage =>
+  app.domainTool ? unilinkThirdParty(app) : app.tunnelTool ? cftunnelThirdParty(app) : ({
   eyebrow: 'Third-Party Notices',
   title: 'Third-Party Components and Licenses',
   lead: `This page lists the cloud service, open-source components and proprietary third-party components used by ${app.name.en}. The app itself is closed-source software with no source code address; the components below remain owned by their rights holders under their respective licenses.`,
@@ -872,7 +1211,8 @@ const thirdParty = (app: AppInfo): DocPage => app.domainTool ? unilinkThirdParty
   ],
 })
 
-const support = (app: AppInfo): DocPage => app.domainTool ? unilinkSupport(app) : ({
+const support = (app: AppInfo): DocPage =>
+  app.domainTool ? unilinkSupport(app) : app.tunnelTool ? cftunnelSupport(app) : ({
   eyebrow: 'Support',
   title: 'Support',
   lead: `This page covers the most common setup and troubleshooting steps for ${app.name.en} (<span class="mono">${app.id}</span>). The app is closed-source and does not provide a source repository or public issue tracker; please contact us through the developer website.`,

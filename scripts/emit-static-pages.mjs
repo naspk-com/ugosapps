@@ -49,6 +49,29 @@ const apps = [
       },
     },
   },
+  {
+    slug: 'cftunnel',
+    zh: 'Cloudflare Tunnel',
+    en: 'Cloudflare Tunnel',
+    descs: {
+      privacy: {
+        zh: 'Cloudflare 凭据、隧道与 DNS 缓存、运行日志的处理方式。',
+        en: 'How Cloudflare credentials, tunnel and DNS caches, and runtime logs are handled.',
+      },
+      terms: {
+        zh: '闭源软件的使用许可、隧道暴露风险、第三方服务与责任限制。',
+        en: 'License grant, tunnel exposure risk, third-party services and liability limits.',
+      },
+      'third-party': {
+        zh: 'Cloudflare 服务、cloudflared（Apache-2.0）与开源组件的许可说明。',
+        en: 'Cloudflare services, cloudflared (Apache-2.0) and open-source components.',
+      },
+      support: {
+        zh: 'Token 权限、隧道创建与运行、DNS 记录与连接故障排查。',
+        en: 'Token scopes, creating and running tunnels, DNS records and connectivity troubleshooting.',
+      },
+    },
+  },
 ]
 
 const docs = [

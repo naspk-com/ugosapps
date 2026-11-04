@@ -9,6 +9,7 @@ import thunderIcon from '@/assets/apps/thunder.png'
 import ucpanIcon from '@/assets/apps/ucpan.png'
 import wopanIcon from '@/assets/apps/wopan.png'
 import unilinkIcon from '@/assets/apps/unilink.png'
+import cftunnelIcon from '@/assets/apps/cftunnel.png'
 
 export interface Localized {
   zh: string
@@ -44,6 +45,8 @@ export interface AppInfo {
   thunderEngine?: boolean
   /** Domain / DNS management tool, uses its own document set */
   domainTool?: boolean
+  /** Cloudflare Tunnel tool, uses its own document set */
+  tunnelTool?: boolean
 }
 
 export const apps: AppInfo[] = [
@@ -167,6 +170,18 @@ export const apps: AppInfo[] = [
     portalLabel: 'www.dustinky.com',
     login: { zh: '阿里云 / 腾讯云 / Cloudflare API 凭据', en: 'Aliyun, Tencent Cloud or Cloudflare API credentials' },
     domainTool: true,
+  },
+  {
+    slug: 'cftunnel',
+    id: 'com.naspk.cftunnel',
+    name: { zh: 'Cloudflare Tunnel', en: 'Cloudflare Tunnel' },
+    provider: { zh: 'Cloudflare', en: 'Cloudflare' },
+    category: 'network',
+    icon: cftunnelIcon,
+    portal: 'https://www.cloudflare.com',
+    portalLabel: 'www.cloudflare.com',
+    login: { zh: 'Cloudflare API Token 或 Tunnel Token', en: 'Cloudflare API token or tunnel token' },
+    tunnelTool: true,
   },
 ]
 
