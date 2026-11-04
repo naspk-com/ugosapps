@@ -1,5 +1,6 @@
 import type { AppInfo } from './apps'
 import type { DocPage, DocSet } from './types'
+import { CONTACT_EMAIL, QQ_GROUP_NO, QQ_GROUP_URL } from '../../contact'
 
 const UPDATED = '2026-11-02'
 const DEVELOPER = '尘墨成'
@@ -174,7 +175,7 @@ const unilinkPrivacy = (app: AppInfo): DocPage => ({
       blocks: [
         {
           kind: 'text',
-          html: `Developer: ${DEVELOPER}<br>Website and contact: <a href="${SITE}" target="_blank" rel="noopener">${SITE}</a>`,
+          html: `Developer: ${DEVELOPER}<br>Website: <a href="${SITE}" target="_blank" rel="noopener">${SITE}</a><br>QQ group: <a href="${QQ_GROUP_URL}" target="_blank" rel="noopener">${QQ_GROUP_NO}</a>　·　Email: <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>`,
         },
       ],
     },
@@ -495,7 +496,7 @@ const unilinkSupport = (app: AppInfo): DocPage => ({
       blocks: [
         {
           kind: 'text',
-          html: `Developer: ${DEVELOPER}<br>Website and contact: <a href="${SITE}" target="_blank" rel="noopener">${SITE}</a>`,
+          html: `Developer: ${DEVELOPER}<br>Website: <a href="${SITE}" target="_blank" rel="noopener">${SITE}</a><br>QQ group: <a href="${QQ_GROUP_URL}" target="_blank" rel="noopener">${QQ_GROUP_NO}</a>　·　Email: <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>`,
         },
       ],
     },
@@ -1006,7 +1007,7 @@ const support = (app: AppInfo): DocPage => app.domainTool ? unilinkSupport(app) 
       blocks: [
         {
           kind: 'text',
-          html: `Developer: ${DEVELOPER}<br>Website and contact: <a href="${SITE}" target="_blank" rel="noopener">${SITE}</a><br>Privacy: <a href="privacy.html">privacy.html</a>　·　Terms: <a href="terms.html">terms.html</a>`,
+          html: `Developer: ${DEVELOPER}<br>Website: <a href="${SITE}" target="_blank" rel="noopener">${SITE}</a><br>QQ group: <a href="${QQ_GROUP_URL}" target="_blank" rel="noopener">${QQ_GROUP_NO}</a>　·　Email: <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a><br>Privacy: <a href="privacy.html">privacy.html</a>　·　Terms: <a href="terms.html">terms.html</a>`,
         },
       ],
     },

@@ -27,7 +27,6 @@ export default {
     lead: 'NASPK 专注为绿联 NAS（UGOS Pro）开发与适配应用。现阶段以 11 款云盘工具为主，域名与网络管理也已上架；以后还会有更多类型的应用，但交付标准始终不变。',
     primary: '浏览全部应用',
     secondary: '了解我们的做法',
-    marquee: '当前上架',
     stats: {
       apps: '款应用',
       types: '类应用',
@@ -85,6 +84,8 @@ export default {
     appsIndex: '应用目录',
     appsTitle: '当前上架的应用',
     appsLead: '按类别筛选，或搜索应用名称与 ID。每款应用都有独立页面，包含简介、连接方式与相关信息。',
+    appsDisclaimer:
+      'NASPK 是独立的第三方开发者，与绿联科技无隶属或代理关系，不代表绿联官方立场。绿联、UGOS 等名称归其权利人所有。',
     allApps: '全部',
     filterLabel: '按类别筛选应用',
     searchLabel: '搜索应用',
@@ -136,6 +137,11 @@ export default {
         a: '应用数据目录随卸载一并删除；写入「文件夹授权」目录中的文件按该目录自身的策略保留。',
       },
     ],
+    communityIndex: '社区',
+    communityTitle: '加入 QQ 交流群',
+    communityLead:
+      '安装、文件夹授权、账号绑定、播放与备份等问题，都可以在群里直接反馈，也可以邮件联系我们。',
+    communityJoin: '加入 QQ 群',
   },
   docDesc: {
     privacy: '账号凭据、文件信息、日志与 AI 功能数据的处理方式。',
@@ -190,8 +196,8 @@ export default {
     install: '安装指南',
     faq: '常见问题',
     note: '各应用协议独立维护；变更会在对应页面更新「最近更新」日期。',
-    disclaimer:
-      'NASPK 是独立的第三方开发者，与绿联科技无隶属或代理关系，不代表绿联官方立场。绿联、UGOS 等名称归其权利人所有。',
+    qqGroup: 'QQ 交流群',
+    qqJoin: '加入 QQ 群',
     rights: '保留所有权利',
   },
 }

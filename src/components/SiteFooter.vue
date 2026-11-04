@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { apps } from '@/i18n/docs/apps'
 import { docPath, homePath } from '@/i18n/docs'
 import type { LocaleCode } from '@/i18n/docs/types'
+import { CONTACT_EMAIL, QQ_GROUP_NO, QQ_GROUP_URL } from '@/contact'
 
 const props = defineProps<{ locale: LocaleCode }>()
 
@@ -60,12 +61,19 @@ const year = new Date().getFullYear()
           <span class="footer-title">{{ t('footer.developer') }}</span>
           <p>{{ t('footer.note') }}</p>
           <p class="mono">www.dustinky.com</p>
-          <p>{{ t('footer.disclaimer') }}</p>
+          <p class="footer-contact">
+            <a :href="QQ_GROUP_URL" target="_blank" rel="noopener">
+              {{ t('footer.qqGroup') }} {{ QQ_GROUP_NO }}
+            </a>
+            <span class="footer-sep">·</span>
+            <a :href="`mailto:${CONTACT_EMAIL}`">{{ CONTACT_EMAIL }}</a>
+          </p>
         </div>
       </div>
 
       <div class="footer-bottom">
         <span>© {{ year }} NASPK · {{ t('footer.rights') }}</span>
+        <a :href="QQ_GROUP_URL" target="_blank" rel="noopener">{{ t('footer.qqJoin') }}</a>
         <span class="mono">ugosapps.naspk.com</span>
       </div>
     </div>

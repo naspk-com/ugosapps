@@ -21,7 +21,12 @@
   --danger: #ff8f8f;
   --radius: 22px;
   --radius-sm: 14px;
-  --max: 1180px;
+  --max: 1440px;
+  --font-sans: 'Segoe UI Variable Text', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei UI',
+    'Microsoft YaHei', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Segoe UI Variable Display', 'Segoe UI', 'PingFang SC', 'Microsoft YaHei UI',
+    'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'SFMono-Regular', 'JetBrains Mono', Consolas, monospace;
   --header-h: 70px;
   --shadow: 0 24px 60px -32px rgba(0, 0, 0, 0.85);
   --shadow-lift: 0 34px 80px -36px rgba(0, 0, 0, 0.95);
@@ -44,11 +49,10 @@ body {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system,
-    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.65;
-  font-feature-settings: 'ss01' 1, 'cv11' 1;
+  font-feature-settings: 'kern' 1;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
@@ -78,9 +82,10 @@ h1,
 h2,
 h3,
 h4 {
-  font-weight: 750;
-  letter-spacing: -0.035em;
-  line-height: 1.12;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
 }
 
 /* ---------- ambience ---------- */
@@ -138,10 +143,10 @@ body::before {
 }
 
 .mono {
-  font-family: 'JetBrains Mono', 'SFMono-Regular', 'Cascadia Code', Consolas, monospace;
-  font-size: 0.82em;
+  font-family: var(--font-sans);
+  font-size: 0.88em;
   letter-spacing: 0.01em;
-  font-variant-ligatures: none;
+  font-variant-numeric: tabular-nums;
 }
 
 .visually-hidden {
@@ -235,15 +240,15 @@ body::before {
 
 .brand-text strong {
   font-size: 0.95rem;
-  font-weight: 750;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .brand-text small {
   font-size: 0.68rem;
   color: var(--faint);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-transform: none;
 }
 
 .nav {
@@ -341,11 +346,11 @@ body::before {
   gap: 10px;
   margin: 0 0 22px;
   color: var(--mint);
-  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: none;
 }
 
 .eyebrow::before {
@@ -358,9 +363,9 @@ body::before {
 .hero-title {
   margin: 0 0 22px;
   font-size: clamp(2.5rem, 5.4vw, 4.1rem);
-  line-height: 1.03;
-  letter-spacing: -0.05em;
-  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 700;
 }
 
 .hero.compact .hero-title {
@@ -424,15 +429,15 @@ body::before {
 
 .stat strong {
   font-size: 1.7rem;
-  font-weight: 750;
-  letter-spacing: -0.04em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.1;
 }
 
 .stat span {
   color: var(--faint);
   font-size: 0.78rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
 }
 
 /* ---------- orb visual ---------- */
@@ -490,44 +495,57 @@ body::before {
   border-radius: 12px;
 }
 
+.orb-orbit {
+  position: absolute;
+  inset: 0;
+  animation: orb-spin 64s linear infinite;
+}
+
 .orb-icon {
-  --r: 38cqw;
+  --r: 42cqw;
   position: absolute;
   left: 50%;
   top: 50%;
-  display: grid;
-  place-items: center;
   width: 54px;
   height: 54px;
+  margin: -27px 0 0 -27px;
   transform: rotate(var(--a)) translate(0, calc(-1 * var(--r))) rotate(calc(-1 * var(--a)));
+}
+
+.orb-icon-inner {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
   border-radius: 16px;
   background: rgba(12, 15, 21, 0.9);
   border: 1px solid var(--line);
   box-shadow: 0 16px 34px -20px rgba(0, 0, 0, 0.9);
-  animation: orb-float 7s ease-in-out infinite;
-  animation-delay: var(--d);
+  animation: orb-counter 64s linear infinite;
 }
 
-.orb-icon img {
+.orb-icon-inner img {
   width: 34px;
   height: 34px;
   border-radius: 9px;
   object-fit: contain;
 }
 
-@keyframes orb-rotate {
+@keyframes orb-spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes orb-float {
-  0%,
-  100% {
-    translate: 0 0;
+@keyframes orb-counter {
+  to {
+    transform: rotate(-360deg);
   }
-  50% {
-    translate: 0 -7px;
+}
+
+@keyframes orb-rotate {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -544,17 +562,9 @@ body::before {
   overflow: hidden;
 }
 
-.marquee-label {
-  flex-shrink: 0;
-  color: var(--faint);
-  font-family: 'JetBrains Mono', Consolas, monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding-left: max(28px, calc((100vw - var(--max)) / 2 + 28px));
-}
-
 .marquee-viewport {
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
@@ -617,10 +627,11 @@ body::before {
   align-items: center;
   gap: 10px;
   color: var(--mint);
-  font-family: 'JetBrains Mono', Consolas, monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: none;
 }
 
 .section-index::after {
@@ -633,7 +644,7 @@ body::before {
 .section-head h2 {
   margin: 0;
   font-size: clamp(1.75rem, 3.2vw, 2.5rem);
-  letter-spacing: -0.045em;
+  letter-spacing: -0.02em;
 }
 
 .section-desc {
@@ -698,15 +709,15 @@ body::before {
 
 .bento-num {
   color: var(--faint);
-  font-family: 'JetBrains Mono', Consolas, monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
 }
 
 .bento-card h3 {
   margin: 0;
   font-size: 1.14rem;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
 }
 
 .bento-card p {
@@ -775,7 +786,7 @@ body::before {
   border: 1px solid var(--line);
   background: rgba(0, 0, 0, 0.36);
   color: var(--mint);
-  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.75rem;
   overflow-x: auto;
   white-space: nowrap;
@@ -957,8 +968,8 @@ body::before {
   color: #c3c9ff;
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 
 .tag.mint {
@@ -1001,10 +1012,10 @@ body::before {
   display: block;
   margin-bottom: 44px;
   color: rgba(255, 255, 255, 0.13);
-  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 3.4rem;
   font-weight: 700;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.02em;
   line-height: 1;
 }
 
@@ -1061,7 +1072,7 @@ body::before {
   padding: 18px 22px;
   color: var(--text);
   font-size: 0.96rem;
-  font-weight: 550;
+  font-weight: 600;
   cursor: pointer;
   list-style: none;
 }
@@ -1074,7 +1085,7 @@ body::before {
   content: '+';
   flex-shrink: 0;
   color: var(--mint);
-  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 1rem;
   transition: transform 0.2s ease;
 }
@@ -1274,8 +1285,8 @@ thead th {
   color: var(--faint);
   font-weight: 600;
   font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   white-space: nowrap;
 }
 
@@ -1331,7 +1342,7 @@ tbody tr:hover {
   gap: 8px;
   padding: 22px 0 0;
   color: var(--faint);
-  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-family: var(--font-sans);
   font-size: 0.72rem;
   letter-spacing: 0.02em;
   flex-wrap: wrap;
@@ -1398,10 +1409,11 @@ tbody tr:hover {
 .toc-title {
   margin: 0 0 12px;
   color: var(--faint);
-  font-family: 'JetBrains Mono', Consolas, monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: none;
 }
 
 .toc a {
@@ -1539,15 +1551,16 @@ tbody tr:hover {
 
 .pager-link small {
   color: var(--faint);
-  font-family: 'JetBrains Mono', Consolas, monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: none;
 }
 
 .pager-link span {
   font-size: 0.9rem;
-  font-weight: 550;
+  font-weight: 600;
 }
 
 .doc-back {
@@ -1591,11 +1604,11 @@ tbody tr:hover {
 
 .notfound-code {
   margin: 0;
-  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: clamp(4rem, 12vw, 7rem);
   font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.06em;
+  letter-spacing: -0.02em;
   background: linear-gradient(110deg, var(--mint), var(--periwinkle));
   -webkit-background-clip: text;
   background-clip: text;
@@ -1627,39 +1640,43 @@ tbody tr:hover {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr) minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: 36px;
-  padding: 54px 0 46px;
+  grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(0, 0.6fr)) minmax(0, 1.1fr);
+  gap: 40px;
+  padding: 52px 0 44px;
   align-items: start;
 }
 
 .footer-brand {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   align-items: flex-start;
 }
 
 .footer-brand p {
-  margin: 3px 0 0;
-  color: var(--faint);
+  margin: 0;
+  max-width: 24rem;
+  color: var(--muted);
   font-size: 0.82rem;
+  line-height: 1.65;
 }
 
 .footer-brand strong {
   display: block;
-  margin-bottom: 3px;
-  font-size: 0.95rem;
+  margin-bottom: 4px;
+  font-size: 1.02rem;
+  letter-spacing: 0.01em;
 }
 
 .footer-links {
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  font-size: 0.84rem;
+  gap: 10px;
+  font-size: 0.85rem;
 }
 
 .footer-links a {
   color: var(--muted);
+  transition: color 0.18s ease;
 }
 
 .footer-links a:hover {
@@ -1668,23 +1685,28 @@ tbody tr:hover {
 
 .footer-title {
   display: block;
-  margin-bottom: 3px;
-  color: var(--faint);
-  font-family: 'JetBrains Mono', Consolas, monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  margin-bottom: 6px;
+  color: var(--text-soft);
+  font-family: inherit;
+  font-size: 0.9rem;
   font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .footer-note {
-  color: var(--faint);
-  font-size: 0.78rem;
-  line-height: 1.7;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.75;
 }
 
 .footer-note p {
-  margin: 0 0 8px;
+  margin: 0 0 9px;
+}
+
+.footer-note .mono {
+  color: var(--text-soft);
+  font-size: 0.82rem;
 }
 
 .footer-bottom {
@@ -1695,8 +1717,90 @@ tbody tr:hover {
   padding: 18px 0 26px;
   border-top: 1px solid var(--line);
   color: var(--faint);
-  font-size: 0.74rem;
+  font-size: 0.76rem;
   flex-wrap: wrap;
+}
+
+.footer-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.footer-contact a,
+.footer-bottom a {
+  color: var(--text-soft);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-contact a:hover,
+.footer-bottom a:hover {
+  color: var(--mint);
+  border-bottom-color: currentColor;
+}
+
+.footer-sep {
+  color: var(--faint);
+}
+
+.apps-disclaimer {
+  margin: 30px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--faint);
+  font-size: 0.78rem;
+  line-height: 1.7;
+}
+
+/* ---------- community ---------- */
+
+.community-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding: 34px 38px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(120% 160% at 0% 0%, var(--mint-dim), transparent 60%),
+    var(--surface);
+}
+
+.community-copy {
+  max-width: 640px;
+}
+
+.community-card h2 {
+  margin: 6px 0 10px;
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  letter-spacing: -0.02em;
+}
+
+.community-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .community-card {
+    padding: 26px 22px;
+  }
+
+  .community-actions {
+    width: 100%;
+  }
+
+  .community-actions .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
 }
 
 /* ---------- reveal ---------- */
@@ -1877,10 +1981,6 @@ tbody tr:hover {
     grid-template-columns: 1fr;
     gap: 26px;
     padding: 40px 0 34px;
-  }
-
-  .marquee-label {
-    display: none;
   }
 }
 

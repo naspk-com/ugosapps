@@ -11,6 +11,7 @@ import {
 } from '@/i18n/docs/apps'
 import { docPath } from '@/i18n/docs'
 import type { LocaleCode } from '@/i18n/docs/types'
+import { CONTACT_EMAIL, QQ_GROUP_NO, QQ_GROUP_URL } from '@/contact'
 
 const props = defineProps<{ locale: LocaleCode }>()
 
@@ -68,7 +69,6 @@ const orbStyle = (index: number): Record<string, string> => {
   const total = heroApps.value.length
   return {
     '--a': `${(index / total) * 360}deg`,
-    '--d': `${index * 0.45}s`,
   }
 }
 
@@ -128,21 +128,24 @@ const resetFilters = (): void => {
           <div class="orb-core">
             <img src="/favicon.svg" alt="" width="60" height="60" />
           </div>
-          <span
-            v-for="(app, index) in heroApps"
-            :key="app.slug"
-            class="orb-icon"
-            :style="orbStyle(index)"
-          >
-            <img :src="app.icon" alt="" width="34" height="34" loading="lazy" decoding="async" />
-          </span>
+          <div class="orb-orbit">
+            <span
+              v-for="(app, index) in heroApps"
+              :key="app.slug"
+              class="orb-icon"
+              :style="orbStyle(index)"
+            >
+              <span class="orb-icon-inner">
+                <img :src="app.icon" alt="" width="34" height="34" loading="lazy" decoding="async" />
+              </span>
+            </span>
+          </div>
         </div>
       </div>
     </section>
   </div>
 
   <div class="marquee" aria-hidden="true">
-    <span class="marquee-label">{{ t('home.marquee') }}</span>
     <div class="marquee-viewport">
       <div class="marquee-track">
         <span v-for="(app, index) in doubled" :key="`${app.slug}-${index}`" class="marquee-item">
@@ -300,6 +303,8 @@ const resetFilters = (): void => {
           {{ t('home.clear') }}
         </button>
       </div>
+
+      <p class="apps-disclaimer">{{ t('home.appsDisclaimer') }}</p>
     </section>
 
     <section id="install" class="section">
@@ -333,6 +338,22 @@ const resetFilters = (): void => {
           <summary>{{ item.q }}</summary>
           <p>{{ item.a }}</p>
         </details>
+      </div>
+    </section>
+
+    <section id="community" class="section">
+      <div class="community-card" data-reveal>
+        <div class="community-copy">
+          <span class="section-index">05 / {{ t('home.communityIndex') }}</span>
+          <h2>{{ t('home.communityTitle') }}</h2>
+          <p class="section-desc">{{ t('home.communityLead') }}</p>
+        </div>
+        <div class="community-actions">
+          <a class="btn btn-primary" :href="QQ_GROUP_URL" target="_blank" rel="noopener">
+            {{ t('home.communityJoin') }} {{ QQ_GROUP_NO }}
+          </a>
+          <a class="btn btn-ghost" :href="`mailto:${CONTACT_EMAIL}`">{{ CONTACT_EMAIL }}</a>
+        </div>
       </div>
     </section>
   </div>

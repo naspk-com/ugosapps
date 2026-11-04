@@ -27,7 +27,6 @@ export default {
     lead: 'NASPK builds and adapts apps for UGREEN NAS (UGOS Pro). Today that means eleven cloud drive tools plus domain and network management — and more app types are on the way, held to the same standard.',
     primary: 'Browse every app',
     secondary: 'See how we build',
-    marquee: 'Available now',
     stats: {
       apps: 'apps',
       types: 'categories',
@@ -85,6 +84,8 @@ export default {
     appsIndex: 'Catalog',
     appsTitle: 'Apps available today',
     appsLead: 'Filter by category or search by name and ID. Every app has its own page with an overview, sign-in method and more.',
+    appsDisclaimer:
+      'NASPK is an independent third-party developer with no affiliation with or agency for UGREEN, and does not represent UGREEN. UGREEN, UGOS and related names belong to their respective owners.',
     allApps: 'All',
     filterLabel: 'Filter apps by category',
     searchLabel: 'Search apps',
@@ -136,6 +137,11 @@ export default {
         a: 'The app data directory is removed with the app. Files written into authorized folders follow that folder policy and stay.',
       },
     ],
+    communityIndex: 'Community',
+    communityTitle: 'Join our QQ group',
+    communityLead:
+      'Install, folder authorisation, account binding, playback and backup questions are all welcome in the group, or email us.',
+    communityJoin: 'Join QQ group',
   },
   docDesc: {
     privacy: 'How account credentials, file information, logs and AI data are handled.',
@@ -190,8 +196,8 @@ export default {
     install: 'Install guide',
     faq: 'FAQ',
     note: 'Documents are maintained per app; changes update the "Last updated" date on the corresponding page.',
-    disclaimer:
-      'NASPK is an independent third-party developer with no affiliation with or agency for UGREEN. UGREEN and UGOS are trademarks of their respective owners.',
+    qqGroup: 'QQ group',
+    qqJoin: 'Join QQ group',
     rights: 'All rights reserved',
   },
 }

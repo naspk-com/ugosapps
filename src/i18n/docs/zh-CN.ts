@@ -1,5 +1,6 @@
 import type { AppInfo } from './apps'
 import type { DocPage, DocSet } from './types'
+import { CONTACT_EMAIL, QQ_GROUP_NO, QQ_GROUP_URL } from '../../contact'
 
 const UPDATED = '2026-11-02'
 const DEVELOPER = '尘墨成'
@@ -174,7 +175,7 @@ const unilinkPrivacy = (app: AppInfo): DocPage => ({
       blocks: [
         {
           kind: 'text',
-          html: `开发者：${DEVELOPER}<br>官网与联系方式：<a href="${SITE}" target="_blank" rel="noopener">${SITE}</a>`,
+          html: `开发者：${DEVELOPER}<br>官网：<a href="${SITE}" target="_blank" rel="noopener">${SITE}</a><br>QQ 交流群：<a href="${QQ_GROUP_URL}" target="_blank" rel="noopener">${QQ_GROUP_NO}</a>　·　邮箱：<a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>`,
         },
       ],
     },
@@ -495,7 +496,7 @@ const unilinkSupport = (app: AppInfo): DocPage => ({
       blocks: [
         {
           kind: 'text',
-          html: `开发者：${DEVELOPER}<br>官网与联系方式：<a href="${SITE}" target="_blank" rel="noopener">${SITE}</a>`,
+          html: `开发者：${DEVELOPER}<br>官网：<a href="${SITE}" target="_blank" rel="noopener">${SITE}</a><br>QQ 交流群：<a href="${QQ_GROUP_URL}" target="_blank" rel="noopener">${QQ_GROUP_NO}</a>　·　邮箱：<a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>`,
         },
       ],
     },
@@ -1009,7 +1010,7 @@ const support = (app: AppInfo): DocPage => app.domainTool ? unilinkSupport(app) 
       blocks: [
         {
           kind: 'text',
-          html: `开发者：${DEVELOPER}<br>官网与联系方式：<a href="${SITE}" target="_blank" rel="noopener">${SITE}</a><br>隐私政策：<a href="privacy.html">隐私政策</a>　·　用户协议：<a href="terms.html">用户协议</a>`,
+          html: `开发者：${DEVELOPER}<br>官网：<a href="${SITE}" target="_blank" rel="noopener">${SITE}</a><br>QQ 交流群：<a href="${QQ_GROUP_URL}" target="_blank" rel="noopener">${QQ_GROUP_NO}</a>　·　邮箱：<a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a><br>隐私政策：<a href="privacy.html">隐私政策</a>　·　用户协议：<a href="terms.html">用户协议</a>`,
         },
       ],
     },
