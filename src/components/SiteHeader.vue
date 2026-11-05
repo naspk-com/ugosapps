@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import DocIcon from '@/components/DocIcon.vue'
 import { docPath, homePath } from '@/i18n/docs'
 import { route } from '@/router'
+import { setThemeMode, themeMode, type ThemeMode } from '@/theme'
 
 const { t } = useI18n()
 
@@ -27,6 +28,12 @@ const sections = [
   { id: 'install', key: 'nav.install' },
   { id: 'faq', key: 'nav.faq' },
 ] as const
+
+const themeOptions: { value: ThemeMode; icon: 'sun' | 'moon' | 'auto'; label: string }[] = [
+  { value: 'light', icon: 'sun', label: 'theme.light' },
+  { value: 'dark', icon: 'moon', label: 'theme.dark' },
+  { value: 'auto', icon: 'auto', label: 'theme.auto' },
+]
 </script>
 
 <template>
@@ -51,6 +58,21 @@ const sections = [
       </nav>
 
       <div class="header-actions">
+        <div class="theme-switch" role="group" :aria-label="t('theme.label')">
+          <button
+            v-for="option in themeOptions"
+            :key="option.value"
+            type="button"
+            class="theme-option"
+            :class="{ 'is-active': themeMode === option.value }"
+            :aria-pressed="themeMode === option.value"
+            :aria-label="t(option.label)"
+            :title="t(option.label)"
+            @click="setThemeMode(option.value)"
+          >
+            <DocIcon :name="option.icon" />
+          </button>
+        </div>
         <a class="lang-switch" :href="langHref">
           <DocIcon name="globe" />
           {{ t('lang.switch') }}

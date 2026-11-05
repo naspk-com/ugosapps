@@ -3,7 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#06070a" />
+    <meta name="theme-color" content="#f5f6f9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#06070a" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Apply the stored theme before the stylesheet paints, so there is no flash.
+      (function () {
+        try {
+          var stored = localStorage.getItem('naspk-theme')
+          var mode = stored === 'light' || stored === 'dark' ? stored : 'auto'
+          var dark =
+            mode === 'dark' ||
+            (mode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.classList.add(dark ? 'dark' : 'light')
+          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
+        } catch (error) {
+          document.documentElement.classList.add('light')
+        }
+      })()
+    </script>
     <meta
       name="description"
       content="NASPK 是独立的第三方开发者，专注为绿联 NAS（UGOS Pro）开发与适配应用：当前包括 11 款云盘工具与域名、网络管理，更多类型持续加入。"

@@ -20,6 +20,12 @@ export default {
     switch: '中文',
     code: 'en',
   },
+  theme: {
+    label: 'Theme',
+    light: 'Light',
+    dark: 'Dark',
+    auto: 'System',
+  },
   home: {
     eyebrow: 'UGOS Pro · Independent developer',
     title: 'Apps built for',

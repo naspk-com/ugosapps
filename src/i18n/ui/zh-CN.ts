@@ -20,6 +20,12 @@ export default {
     switch: 'English',
     code: 'zh-CN',
   },
+  theme: {
+    label: '主题',
+    light: '浅色',
+    dark: '深色',
+    auto: '跟随系统',
+  },
   home: {
     eyebrow: 'UGOS Pro · 独立开发者',
     title: '为绿联 NAS，',
