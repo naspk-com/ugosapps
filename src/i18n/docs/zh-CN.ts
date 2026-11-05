@@ -1143,6 +1143,7 @@ const thirdParty = (app: AppInfo): DocPage =>
   meta: `最近更新：${UPDATED}`,
   sections: [
     {
+      id: 'providers',
       title: '1. 云服务提供方',
       blocks: [
         {
@@ -1157,6 +1158,7 @@ const thirdParty = (app: AppInfo): DocPage =>
       ],
     },
     {
+      id: 'oss',
       title: '2. 开源组件',
       blocks: [
         {
@@ -1179,6 +1181,7 @@ const thirdParty = (app: AppInfo): DocPage =>
       ],
     },
     {
+      id: 'proprietary',
       title: '3. 第三方专有组件',
       blocks: [
         {
@@ -1202,6 +1205,7 @@ const thirdParty = (app: AppInfo): DocPage =>
       ],
     },
     {
+      id: 'source',
       title: '4. 关于源代码',
       blocks: [
         {

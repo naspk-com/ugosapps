@@ -1141,6 +1141,7 @@ const thirdParty = (app: AppInfo): DocPage =>
   meta: `Last updated: ${UPDATED}`,
   sections: [
     {
+      id: 'providers',
       title: '1. Cloud service providers',
       blocks: [
         {
@@ -1155,6 +1156,7 @@ const thirdParty = (app: AppInfo): DocPage =>
       ],
     },
     {
+      id: 'oss',
       title: '2. Open-source components',
       blocks: [
         {
@@ -1177,6 +1179,7 @@ const thirdParty = (app: AppInfo): DocPage =>
       ],
     },
     {
+      id: 'proprietary',
       title: '3. Proprietary third-party components',
       blocks: [
         {
@@ -1200,6 +1203,7 @@ const thirdParty = (app: AppInfo): DocPage =>
       ],
     },
     {
+      id: 'source',
       title: '4. About source code',
       blocks: [
         {

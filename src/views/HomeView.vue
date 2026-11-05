@@ -6,6 +6,7 @@ import {
   appCategories,
   apps,
   categoryById,
+  cloudApps,
   type AppCategoryId,
   type AppInfo,
 } from '@/i18n/docs/apps'
@@ -61,7 +62,7 @@ const categoryOf = (app: AppInfo): string => {
 
 const unilink = computed(() => apps.find((app) => app.slug === 'unilink'))
 
-const heroApps = computed(() => apps.filter((app) => app.slug !== 'unilink'))
+const heroApps = computed(() => apps)
 const stackApps = computed(() => apps.slice(0, 6))
 
 const marqueeViewport = ref<HTMLElement | null>(null)
@@ -71,7 +72,7 @@ const marqueeStyle = ref<Record<string, string>>({})
 
 const marqueeItems = computed(() =>
   Array.from({ length: marqueeSets.value * 2 }, (_, set) =>
-    apps.map((app) => ({ key: `${app.slug}-${set}`, app })),
+    apps.map((app) => ({ key: `${app.slug}-${set}`, app, primary: set === 0 })),
   ).flat(),
 )
 
@@ -157,6 +158,10 @@ const resetFilters = (): void => {
             <span>{{ t('home.stats.apps') }}</span>
           </div>
           <div class="stat">
+            <strong>{{ cloudApps.length }}</strong>
+            <span>{{ t('home.stats.cloudApps') }}</span>
+          </div>
+          <div class="stat">
             <strong>{{ categories.length }}</strong>
             <span>{{ t('home.stats.types') }}</span>
           </div>
@@ -164,46 +169,34 @@ const resetFilters = (): void => {
             <strong>2</strong>
             <span>{{ t('home.stats.langs') }}</span>
           </div>
-          <div class="stat">
-            <strong>0</strong>
-            <span>{{ t('home.stats.cloud') }}</span>
-          </div>
         </div>
       </div>
 
-      <div class="hero-visual" aria-hidden="true">
+      <div class="hero-visual">
         <div class="orb">
-          <div class="orb-ring" />
-          <div class="orb-ring-2" />
-          <div class="orb-core">
+          <div class="orb-ring" aria-hidden="true" />
+          <div class="orb-ring-2" aria-hidden="true" />
+          <div class="orb-core" aria-hidden="true">
             <img src="/favicon.svg" alt="" width="60" height="60" />
           </div>
           <div class="orb-orbit">
-            <span
+            <a
               v-for="(app, index) in heroApps"
               :key="app.slug"
               class="orb-icon"
               :style="orbStyle(index)"
+              :href="docPath(app.slug, 'index', locale)"
+              :title="nameOf(app)"
+              :aria-label="nameOf(app)"
             >
               <span class="orb-icon-inner">
                 <img :src="app.icon" alt="" width="34" height="34" loading="lazy" decoding="async" />
               </span>
-            </span>
+            </a>
           </div>
         </div>
       </div>
     </section>
-  </div>
-
-  <div class="marquee" aria-hidden="true">
-    <div ref="marqueeViewport" class="marquee-viewport">
-      <div ref="marqueeTrack" class="marquee-track" :style="marqueeStyle">
-        <span v-for="item in marqueeItems" :key="item.key" class="marquee-item">
-          <img :src="item.app.icon" alt="" width="22" height="22" loading="lazy" decoding="async" />
-          {{ nameOf(item.app) }}
-        </span>
-      </div>
-    </div>
   </div>
 
   <div class="wrap">
@@ -272,6 +265,29 @@ const resetFilters = (): void => {
       </div>
     </section>
 
+    <div class="marquee-band" data-reveal>
+      <div class="marquee-head">
+        <span class="section-index">{{ t('home.marqueeLabel') }}</span>
+        <span class="marquee-hint">{{ t('home.marqueeNote') }}</span>
+      </div>
+      <div ref="marqueeViewport" class="marquee-viewport">
+        <div ref="marqueeTrack" class="marquee-track" :style="marqueeStyle">
+          <a
+            v-for="item in marqueeItems"
+            :key="item.key"
+            class="marquee-item"
+            :href="docPath(item.app.slug, 'index', locale)"
+            :tabindex="item.primary ? undefined : -1"
+            :aria-hidden="item.primary ? undefined : 'true'"
+          >
+            <img :src="item.app.icon" alt="" width="24" height="24" loading="lazy" decoding="async" />
+            <span class="marquee-name">{{ nameOf(item.app) }}</span>
+            <span class="marquee-tag">{{ providerOf(item.app) }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
     <section id="apps" class="section">
       <div class="section-head row" data-reveal>
         <div>
@@ -327,18 +343,18 @@ const resetFilters = (): void => {
             class="app-mark"
             :src="app.icon"
             :alt="nameOf(app)"
-            width="46"
-            height="46"
+            width="54"
+            height="54"
             loading="lazy"
             decoding="async"
           />
           <span class="app-body">
-            <span class="app-name">
-              {{ nameOf(app) }}
+            <span class="app-name">{{ nameOf(app) }}</span>
+            <span class="app-id mono">{{ app.id }}</span>
+            <span class="app-foot">
+              <span class="app-provider">{{ providerOf(app) }}</span>
               <span class="tag">{{ categoryOf(app) }}</span>
             </span>
-            <span class="app-id mono">{{ app.id }}</span>
-            <span class="app-provider">{{ providerOf(app) }}</span>
           </span>
           <span class="app-arrow" aria-hidden="true">
             <DocIcon name="arrow" />
