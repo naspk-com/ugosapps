@@ -46,8 +46,9 @@
   --radius: 22px;
   --radius-sm: 14px;
   --max: 1440px;
-  --font-sans: 'MiSans', 'Inter Variable', -apple-system, BlinkMacSystemFont, 'PingFang SC',
-    'Noto Sans SC', 'Microsoft YaHei', 'PingFang TC', 'Noto Sans TC', 'Helvetica Neue', sans-serif;
+  --font-sans: 'AlimamaFangYuanTiVF-Thin', 'MiSans', 'Inter Variable', -apple-system,
+    BlinkMacSystemFont, 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', 'PingFang TC',
+    'Noto Sans TC', 'Helvetica Neue', sans-serif;
   --font-display: 'TsangerYuYangT', 'Songti SC', 'Noto Serif SC', 'SimSun', Georgia, serif;
   --font-mono: ui-monospace, 'Cascadia Mono', 'SFMono-Regular', 'JetBrains Mono', Consolas, monospace;
   --header-h: 70px;
@@ -332,6 +333,7 @@ body::before {
   padding: 7px 13px;
   border-radius: 999px;
   color: var(--muted);
+  font-family: var(--font-display);
   font-size: 0.87rem;
   white-space: nowrap;
   transition: color 0.18s ease, background 0.18s ease;
@@ -364,6 +366,7 @@ body::before {
   border: 1px solid var(--line);
   background: transparent;
   color: var(--muted);
+  font-family: var(--font-display);
   font-size: 0.82rem;
   transition: border-color 0.18s ease, color 0.18s ease;
 }
@@ -959,6 +962,7 @@ body::before {
   background: var(--field);
   color: var(--muted);
   font: inherit;
+  font-family: var(--font-display);
   font-size: 0.82rem;
   cursor: pointer;
   transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
@@ -1226,6 +1230,7 @@ body::before {
   padding: 12px 22px;
   border-radius: 999px;
   border: 1px solid transparent;
+  font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: 650;
   letter-spacing: -0.01em;
@@ -1263,6 +1268,7 @@ body::before {
 
 .ghost-button {
   font: inherit;
+  font-family: var(--font-display);
   font-size: 0.86rem;
   padding: 9px 18px;
   border-radius: 999px;
@@ -1433,6 +1439,7 @@ tbody tr:hover {
   border: 1px solid var(--line);
   background: var(--field);
   color: var(--text-soft);
+  font-family: var(--font-display);
   font-size: 0.84rem;
   transition: border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
 }
@@ -1482,6 +1489,7 @@ tbody tr:hover {
   border: 1px solid var(--line);
   background: var(--field);
   color: var(--muted);
+  font-family: var(--font-display);
   font-size: 0.82rem;
 }
 
@@ -1693,6 +1701,7 @@ tbody tr:hover {
   border: 1px solid var(--line);
   background: var(--field);
   color: var(--muted);
+  font-family: var(--font-display);
   font-size: 0.84rem;
 }
 
