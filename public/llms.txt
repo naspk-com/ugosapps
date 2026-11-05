@@ -1,0 +1,30 @@
+# NASPK · 绿联 NAS 应用
+
+> NASPK 是独立的第三方开发者，专注为绿联 NAS（UGOS Pro）开发与适配应用：当前包括 10 款云盘工具与域名、网络管理工具，更多类型持续加入。站点提供每款应用的产品说明与法律文档（隐私政策、用户许可协议、第三方组件说明、技术支持），中英文双语。
+>
+> NASPK is an independent developer building apps for UGREEN NAS (UGOS Pro): ten cloud drive tools plus domain and network management apps. Each app has a product page and legal docs (privacy, terms, third-party notices, support) in Chinese and English.
+
+## 应用 / Apps
+
+- [移动云盘](https://ugosapps.naspk.com/yun139/index.html): 在 UGOS Pro 桌面上直接浏览、上传、下载与备份移动云盘文件
+- [阿里云盘](https://ugosapps.naspk.com/alipan/index.html): 在 UGOS Pro 桌面上管理阿里云盘文件
+- [天翼云盘](https://ugosapps.naspk.com/cloud189/index.html): 在 UGOS Pro 桌面上管理天翼云盘文件
+- [光鸭云盘](https://ugosapps.naspk.com/guangyapan/index.html): 在 UGOS Pro 桌面上管理光鸭云盘文件
+- [115 网盘](https://ugosapps.naspk.com/pan115/index.html): 在 UGOS Pro 桌面上管理 115 网盘文件
+- [123 云盘](https://ugosapps.naspk.com/pan123/index.html): 在 UGOS Pro 桌面上管理 123 云盘文件
+- [夸克网盘](https://ugosapps.naspk.com/quark/index.html): 在 UGOS Pro 桌面上管理夸克网盘文件
+- [迅雷云盘](https://ugosapps.naspk.com/thunder/index.html): 在 UGOS Pro 桌面上管理迅雷云盘文件
+- [UC 网盘](https://ugosapps.naspk.com/ucpan/index.html): 在 UGOS Pro 桌面上管理 UC 网盘文件
+- [联通云盘](https://ugosapps.naspk.com/wopan/index.html): 在 UGOS Pro 桌面上管理联通云盘文件
+- [域联 UniLink](https://ugosapps.naspk.com/unilink/index.html): 在绿联 NAS 上统一管理域名与 DNS：多服务商解析、证书签发与 DDNS
+- [Cloudflare Tunnel](https://ugosapps.naspk.com/cftunnel/index.html): 在绿联 NAS 上运行 Cloudflare Tunnel，无需公网 IP 安全发布内网服务
+
+## English
+
+- [NASPK · Apps for UGREEN NAS](https://ugosapps.naspk.com/en/index.html): English home
+- Each app has an English page under `/<app>/en/index.html` and legal docs under `/<app>/en/{privacy,terms,third-party,support}.html`.
+
+## 文档 / Docs
+
+- [隐私政策示例（移动云盘）](https://ugosapps.naspk.com/yun139/privacy.html): 每款应用目录下均有 privacy / terms / third-party / support 四份文档
+- [Sitemap](https://ugosapps.naspk.com/sitemap.xml): 全站 122 个页面的索引

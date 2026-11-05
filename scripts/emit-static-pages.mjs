@@ -94,6 +94,42 @@ const cloudTagline = {
 const appTagline = (app, locale) =>
   app.tagline?.[locale] ?? (app.kind === 'cloud' ? cloudTagline[locale](app[locale]) : '')
 
+/**
+ * Crawler fallback: real content placed inside #app for spiders that do not
+ * execute JavaScript (Baiduspider 等). Vue mounts by replacing the container,
+ * so regular visitors never see it.
+ */
+const docTitle = (doc, locale) => doc[locale]
+
+const homeBody = (locale) => {
+  const heading = locale === 'zh' ? 'NASPK · 绿联 NAS 应用' : 'NASPK · Apps for UGREEN NAS'
+  const intro =
+    locale === 'zh'
+      ? 'NASPK 专注为绿联 NAS（UGOS Pro）开发与适配应用：当前包括 10 款云盘工具与域名、网络管理工具，更多类型持续加入。'
+      : 'NASPK builds apps for UGREEN NAS (UGOS Pro): ten cloud drive tools plus domain and network management, with more on the way.'
+  const items = apps
+    .map(
+      (app) =>
+        `    <li><a href="${locale === 'zh' ? `/${app.slug}/index.html` : `/${app.slug}/en/index.html`}">${escape(app[locale])}</a> — ${escape(appTagline(app, locale))}</li>`,
+    )
+    .join('\n')
+  return `<main>\n  <h1>${heading}</h1>\n  <p>${intro}</p>\n  <ul>\n${items}\n  </ul>\n</main>`
+}
+
+const appBody = (app, locale) => {
+  const base = locale === 'zh' ? `/${app.slug}` : `/${app.slug}/en`
+  const items = docs
+    .map((doc) => `    <li><a href="${base}/${doc.id}.html">${escape(docTitle(doc, locale))}</a></li>`)
+    .join('\n')
+  return `<main>\n  <h1>${escape(app[locale])}</h1>\n  <p>${escape(appTagline(app, locale))}</p>\n  <ul>\n${items}\n  </ul>\n</main>`
+}
+
+const docBody = (app, doc, locale, description) => {
+  const base = locale === 'zh' ? `/${app.slug}` : `/${app.slug}/en`
+  const back = locale === 'zh' ? `返回${app.zh}首页` : `Back to ${app.en}`
+  return `<main>\n  <h1>${escape(app[locale])} · ${escape(docTitle(doc, locale))}</h1>\n  <p>${escape(description)}</p>\n  <p><a href="${base}/index.html">${escape(back)}</a></p>\n</main>`
+}
+
 const docs = [
   {
     id: 'privacy',
@@ -135,8 +171,12 @@ const escape = (value) =>
 const baseHtml = await readFile(join(dist, 'index.html'), 'utf8')
 
 /** Rewrite <html lang>, <title>, description, OG tags, canonical and hreflang links. */
-const renderPage = ({ locale, title, description, selfUrl, alternates, noindex, jsonLd }) => {
+const renderPage = ({ locale, title, description, selfUrl, alternates, noindex, jsonLd, body }) => {
   let html = baseHtml.replace(/<html lang="[^"]*"/, `<html lang="${locale}"`)
+
+  if (body) {
+    html = html.replace('<div id="app"></div>', `<div id="app">\n${body}\n    </div>`)
+  }
 
   if (title) {
     html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(title)}</title>`)
@@ -207,8 +247,17 @@ const pushUrl = (path, zhPath, enPath, priority = 0.5) => {
   urls.push({ loc: site + path, zh: site + zhPath, en: site + enPath, priority })
 }
 
-/** Home pages: `/index.html` is produced by Vite itself, only `/en/index.html` is new. */
+/** Home pages: rewrite Vite's `/index.html` too, so crawlers see real content. */
 pushUrl('/', '/', '/en/index.html', 1.0)
+await writePage(
+  'index.html',
+  renderPage({
+    locale: 'zh-CN',
+    selfUrl: `${site}/`,
+    alternates: { zh: `${site}/`, en: `${site}/en/index.html` },
+    body: homeBody('zh'),
+  }),
+)
 await writePage(
   'en/index.html',
   renderPage({
@@ -218,6 +267,7 @@ await writePage(
       'NASPK is an independent developer building apps for UGREEN NAS (UGOS Pro): cloud drive tools, domain and network management, with more app types on the way.',
     selfUrl: `${site}/en/index.html`,
     alternates: { zh: `${site}/`, en: `${site}/en/index.html` },
+    body: homeBody('en'),
   }),
 )
 pushUrl('/en/index.html', '/', '/en/index.html', 0.9)
@@ -262,6 +312,7 @@ for (const app of apps) {
       selfUrl: `${site}${zhPaths.home}`,
       alternates: { zh: `${site}${zhPaths.home}`, en: `${site}${zhPaths.en}` },
       jsonLd: softwareJsonLd('zh'),
+      body: appBody(app, 'zh'),
     }),
   )
   pushUrl(zhPaths.home, zhPaths.home, zhPaths.en, 0.8)
@@ -275,6 +326,7 @@ for (const app of apps) {
       selfUrl: `${site}${enPaths.home}`,
       alternates: { zh: `${site}${enPaths.zh}`, en: `${site}${enPaths.home}` },
       jsonLd: softwareJsonLd('en'),
+      body: appBody(app, 'en'),
     }),
   )
   pushUrl(enPaths.home, enPaths.zh, enPaths.home, 0.8)
@@ -293,6 +345,7 @@ for (const app of apps) {
         description: `${app.zh}${doc.zh}：${descZh}`,
         selfUrl: `${site}${zhDocPath}`,
         alternates: { zh: `${site}${zhDocPath}`, en: `${site}${enDocPath}` },
+        body: docBody(app, doc, 'zh', descZh),
       }),
     )
     pushUrl(zhDocPath, zhDocPath, enDocPath)
@@ -305,6 +358,7 @@ for (const app of apps) {
         description: `${app.en} ${doc.en}: ${descEn}`,
         selfUrl: `${site}${enDocPath}`,
         alternates: { zh: `${site}${zhDocPath}`, en: `${site}${enDocPath}` },
+        body: docBody(app, doc, 'en', descEn),
       }),
     )
     pushUrl(enDocPath, zhDocPath, enDocPath)
