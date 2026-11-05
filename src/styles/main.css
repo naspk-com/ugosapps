@@ -131,6 +131,11 @@ body {
   overflow-x: hidden;
 }
 
+/* 爬虫兜底正文：有 JS 时立即隐藏，Vue 挂载后会被替换；无 JS 的蜘蛛仍可读取 */
+html.js #app > main[data-crawler-fallback] {
+  display: none;
+}
+
 ::selection {
   background: var(--selection-bg);
   color: var(--selection-text);

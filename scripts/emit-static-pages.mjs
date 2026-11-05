@@ -113,7 +113,7 @@ const homeBody = (locale) => {
         `    <li><a href="${locale === 'zh' ? `/${app.slug}/index.html` : `/${app.slug}/en/index.html`}">${escape(app[locale])}</a> — ${escape(appTagline(app, locale))}</li>`,
     )
     .join('\n')
-  return `<main>\n  <h1>${heading}</h1>\n  <p>${intro}</p>\n  <ul>\n${items}\n  </ul>\n</main>`
+  return `<main data-crawler-fallback>\n  <h1>${heading}</h1>\n  <p>${intro}</p>\n  <ul>\n${items}\n  </ul>\n</main>`
 }
 
 const appBody = (app, locale) => {
@@ -121,13 +121,13 @@ const appBody = (app, locale) => {
   const items = docs
     .map((doc) => `    <li><a href="${base}/${doc.id}.html">${escape(docTitle(doc, locale))}</a></li>`)
     .join('\n')
-  return `<main>\n  <h1>${escape(app[locale])}</h1>\n  <p>${escape(appTagline(app, locale))}</p>\n  <ul>\n${items}\n  </ul>\n</main>`
+  return `<main data-crawler-fallback>\n  <h1>${escape(app[locale])}</h1>\n  <p>${escape(appTagline(app, locale))}</p>\n  <ul>\n${items}\n  </ul>\n</main>`
 }
 
 const docBody = (app, doc, locale, description) => {
   const base = locale === 'zh' ? `/${app.slug}` : `/${app.slug}/en`
   const back = locale === 'zh' ? `返回${app.zh}首页` : `Back to ${app.en}`
-  return `<main>\n  <h1>${escape(app[locale])} · ${escape(docTitle(doc, locale))}</h1>\n  <p>${escape(description)}</p>\n  <p><a href="${base}/index.html">${escape(back)}</a></p>\n</main>`
+  return `<main data-crawler-fallback>\n  <h1>${escape(app[locale])} · ${escape(docTitle(doc, locale))}</h1>\n  <p>${escape(description)}</p>\n  <p><a href="${base}/index.html">${escape(back)}</a></p>\n</main>`
 }
 
 const docs = [
