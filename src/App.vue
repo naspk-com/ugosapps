@@ -65,7 +65,7 @@ watch(
     } else {
       window.scrollTo({ top: 0, behavior: 'auto' })
     }
-    void nextTick(observeReveal)
+    void nextTick(() => observeReveal())
   },
   { immediate: true },
 )

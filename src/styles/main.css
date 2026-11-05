@@ -1535,6 +1535,9 @@ tbody tr:hover {
 }
 
 .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   padding: 8px 15px;
   border-radius: 999px;
   border: 1px solid var(--line);
@@ -1542,7 +1545,13 @@ tbody tr:hover {
   color: var(--text-soft);
   font-family: var(--font-display);
   font-size: 0.84rem;
+  line-height: 1;
   transition: border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.chip img {
+  flex: none;
+  display: block;
 }
 
 .chip:hover {
@@ -2036,6 +2045,13 @@ tbody tr:hover {
 /* ---------- app landing ---------- */
 
 .app-home {
+  /* 应用主题色默认值（拾色成功后由 node-vibrant 注入覆盖） */
+  --app-1: var(--mint);
+  --app-2: var(--mint);
+  --app-glow: var(--mint-glow);
+  --app-tint: var(--mint-dim);
+  --app-line: var(--mint-line);
+  --app-on: var(--on-mint);
   padding-bottom: 8px;
 }
 
@@ -2060,7 +2076,7 @@ tbody tr:hover {
   position: absolute;
   inset: -26%;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--mint-glow), transparent 62%);
+  background: radial-gradient(circle, var(--app-glow), transparent 62%);
   opacity: 0.55;
   filter: blur(6px);
 }
@@ -2072,7 +2088,7 @@ tbody tr:hover {
   border: 1px solid var(--line);
   border-radius: 38px;
   background: var(--field);
-  box-shadow: 0 30px 60px -30px var(--mint-glow);
+  box-shadow: 0 30px 60px -30px var(--app-glow);
   object-fit: contain;
 }
 
@@ -2113,6 +2129,47 @@ tbody tr:hover {
   background: var(--mint-dim);
   color: var(--mint);
   font-weight: 600;
+}
+
+/* 应用落地页：强调色随应用 logo 主色变化 */
+.app-home .badge.mint {
+  border-color: var(--app-line);
+  background: var(--app-tint);
+  color: var(--app-1);
+}
+
+.app-home .btn-primary {
+  background: var(--app-1);
+  color: var(--app-on);
+  box-shadow: 0 16px 36px -18px var(--app-glow);
+}
+
+.app-home .btn-primary:hover {
+  color: var(--app-on);
+  box-shadow: 0 22px 44px -18px var(--app-glow);
+}
+
+.app-home .app-spec strong.mono,
+.app-home .feature-num {
+  color: var(--app-1);
+}
+
+.app-home .feature-card:hover {
+  border-color: var(--app-line);
+}
+
+.app-home .spec-aside {
+  background: var(--app-tint);
+}
+
+.app-home .spec-aside-icon {
+  border-color: var(--app-line);
+  background: var(--app-tint);
+  color: var(--app-1);
+}
+
+.app-home .app-aside-link {
+  color: var(--app-1);
 }
 
 .app-cta {

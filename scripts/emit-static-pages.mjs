@@ -16,20 +16,25 @@ const dist = join(root, 'dist')
 const site = 'https://ugosapps.naspk.com'
 
 const apps = [
-  { slug: 'yun139', zh: '移动云盘', en: 'China Mobile Cloud' },
-  { slug: 'alipan', zh: '阿里云盘', en: 'Alibaba Cloud Drive' },
-  { slug: 'cloud189', zh: '天翼云盘', en: 'Tianyi Cloud Drive' },
-  { slug: 'guangyapan', zh: '光鸭云盘', en: 'Guangya Drive' },
-  { slug: 'pan115', zh: '115 网盘', en: '115 Drive' },
-  { slug: 'pan123', zh: '123 云盘', en: '123 Cloud Drive' },
-  { slug: 'quark', zh: '夸克网盘', en: 'Quark Drive' },
-  { slug: 'thunder', zh: '迅雷云盘', en: 'Thunder Drive' },
-  { slug: 'ucpan', zh: 'UC 网盘', en: 'UC Drive' },
-  { slug: 'wopan', zh: '联通云盘', en: 'Unicom Cloud Drive' },
+  { slug: 'yun139', zh: '移动云盘', en: 'China Mobile Cloud', kind: 'cloud' },
+  { slug: 'alipan', zh: '阿里云盘', en: 'Alibaba Cloud Drive', kind: 'cloud' },
+  { slug: 'cloud189', zh: '天翼云盘', en: 'Tianyi Cloud Drive', kind: 'cloud' },
+  { slug: 'guangyapan', zh: '光鸭云盘', en: 'Guangya Drive', kind: 'cloud' },
+  { slug: 'pan115', zh: '115 网盘', en: '115 Drive', kind: 'cloud' },
+  { slug: 'pan123', zh: '123 云盘', en: '123 Cloud Drive', kind: 'cloud' },
+  { slug: 'quark', zh: '夸克网盘', en: 'Quark Drive', kind: 'cloud' },
+  { slug: 'thunder', zh: '迅雷云盘', en: 'Thunder Drive', kind: 'cloud' },
+  { slug: 'ucpan', zh: 'UC 网盘', en: 'UC Drive', kind: 'cloud' },
+  { slug: 'wopan', zh: '联通云盘', en: 'Unicom Cloud Drive', kind: 'cloud' },
   {
     slug: 'unilink',
     zh: '域联 UniLink',
     en: 'UniLink',
+    kind: 'domain',
+    tagline: {
+      zh: '在绿联 NAS 上统一管理域名与 DNS：多服务商解析、证书签发与 DDNS。',
+      en: 'Manage domains and DNS on UGREEN NAS: multi-provider records, certificates and DDNS.',
+    },
     descs: {
       privacy: {
         zh: 'API 凭据、域名与解析数据、证书私钥、日志与 AI 功能数据的处理方式。',
@@ -53,6 +58,11 @@ const apps = [
     slug: 'cftunnel',
     zh: 'Cloudflare Tunnel',
     en: 'Cloudflare Tunnel',
+    kind: 'domain',
+    tagline: {
+      zh: '在绿联 NAS 上运行 Cloudflare Tunnel：无需公网 IP 即可安全发布内网服务。',
+      en: 'Run Cloudflare Tunnel on UGREEN NAS: publish local services securely without a public IP.',
+    },
     descs: {
       privacy: {
         zh: 'Cloudflare 凭据、隧道与 DNS 缓存、运行日志的处理方式。',
@@ -73,6 +83,16 @@ const apps = [
     },
   },
 ]
+
+/** 云盘类应用的统一产品定位文案；域名/网络类在条目上用 tagline 覆盖。 */
+const cloudTagline = {
+  zh: (name) => `${name} 绿联 NAS 版：在 UGOS Pro 桌面上直接浏览、上传、下载与备份云端文件。`,
+  en: (name) =>
+    `${name} for UGREEN NAS: browse, upload, download and back up cloud files from the UGOS Pro desktop.`,
+}
+
+const appTagline = (app, locale) =>
+  app.tagline?.[locale] ?? (app.kind === 'cloud' ? cloudTagline[locale](app[locale]) : '')
 
 const docs = [
   {
@@ -114,8 +134,8 @@ const escape = (value) =>
 
 const baseHtml = await readFile(join(dist, 'index.html'), 'utf8')
 
-/** Rewrite <html lang>, <title>, description, canonical and hreflang links. */
-const renderPage = ({ locale, title, description, selfUrl, alternates, noindex }) => {
+/** Rewrite <html lang>, <title>, description, OG tags, canonical and hreflang links. */
+const renderPage = ({ locale, title, description, selfUrl, alternates, noindex, jsonLd }) => {
   let html = baseHtml.replace(/<html lang="[^"]*"/, `<html lang="${locale}"`)
 
   if (title) {
@@ -126,6 +146,33 @@ const renderPage = ({ locale, title, description, selfUrl, alternates, noindex }
     html = html.replace(
       /<meta\s+name="description"\s+content="[\s\S]*?"\s*\/?>/,
       `<meta name="description" content="${escape(description)}" />`,
+    )
+  }
+
+  /* Per-page Open Graph values (base index.html carries the site defaults). */
+  if (title) {
+    html = html.replace(
+      /<meta property="og:title" content="[^"]*" \/>/,
+      `<meta property="og:title" content="${escape(title)}" />`,
+    )
+  }
+  if (description) {
+    html = html.replace(
+      /<meta\s+property="og:description"[\s\S]*?\/>/,
+      `<meta property="og:description" content="${escape(description)}" />`,
+    )
+  }
+  if (selfUrl) {
+    html = html.replace(
+      /<meta property="og:url" content="[^"]*" \/>/,
+      `<meta property="og:url" content="${escape(selfUrl)}" />`,
+    )
+  }
+
+  if (jsonLd) {
+    html = html.replace(
+      '    <link rel="canonical"',
+      `    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n    <link rel="canonical"`,
     )
   }
 
@@ -156,12 +203,12 @@ const writePage = async (path, html) => {
   written.push(path)
 }
 
-const pushUrl = (path, zhPath, enPath) => {
-  urls.push({ loc: site + path, zh: site + zhPath, en: site + enPath })
+const pushUrl = (path, zhPath, enPath, priority = 0.5) => {
+  urls.push({ loc: site + path, zh: site + zhPath, en: site + enPath, priority })
 }
 
 /** Home pages: `/index.html` is produced by Vite itself, only `/en/index.html` is new. */
-urls.push({ loc: `${site}/`, zh: `${site}/`, en: `${site}/en/index.html` })
+pushUrl('/', '/', '/en/index.html', 1.0)
 await writePage(
   'en/index.html',
   renderPage({
@@ -173,7 +220,7 @@ await writePage(
     alternates: { zh: `${site}/`, en: `${site}/en/index.html` },
   }),
 )
-pushUrl('/en/index.html', '/', '/en/index.html')
+pushUrl('/en/index.html', '/', '/en/index.html', 0.9)
 
 await writePage(
   '404.html',
@@ -190,29 +237,47 @@ for (const app of apps) {
     zh: `/${app.slug}/index.html`,
   }
 
+  const categoryZh = app.kind === 'cloud' ? '绿联 NAS 云盘工具' : '绿联 NAS 域名与网络管理'
+  const categoryEn = app.kind === 'cloud' ? 'cloud drive app for UGREEN NAS' : 'domain & network app for UGREEN NAS'
+
+  const softwareJsonLd = (locale) => ({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: app[locale],
+    url: `${site}${locale === 'zh' ? zhPaths.home : enPaths.home}`,
+    description: appTagline(app, locale),
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'UGOS Pro',
+    inLanguage: locale === 'zh' ? 'zh-CN' : 'en',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'CNY' },
+    author: { '@type': 'Organization', name: 'NASPK', url: site },
+  })
+
   await writePage(
     `${app.slug}/index.html`,
     renderPage({
       locale: 'zh-CN',
-      title: `${app.zh} 法律文档 · NASPK`,
-      description: `${app.zh} 的隐私政策、用户许可协议、第三方组件说明与技术支持，独立维护于本应用目录。`,
+      title: `${app.zh} · ${categoryZh} · NASPK`,
+      description: appTagline(app, 'zh'),
       selfUrl: `${site}${zhPaths.home}`,
       alternates: { zh: `${site}${zhPaths.home}`, en: `${site}${zhPaths.en}` },
+      jsonLd: softwareJsonLd('zh'),
     }),
   )
-  pushUrl(zhPaths.home, zhPaths.home, zhPaths.en)
+  pushUrl(zhPaths.home, zhPaths.home, zhPaths.en, 0.8)
 
   await writePage(
     `${app.slug}/en/index.html`,
     renderPage({
       locale: 'en',
-      title: `${app.en} Legal · NASPK`,
-      description: `Privacy policy, license agreement, third-party notices and support for ${app.en}.`,
+      title: `${app.en} · ${categoryEn} · NASPK`,
+      description: appTagline(app, 'en'),
       selfUrl: `${site}${enPaths.home}`,
       alternates: { zh: `${site}${enPaths.zh}`, en: `${site}${enPaths.home}` },
+      jsonLd: softwareJsonLd('en'),
     }),
   )
-  pushUrl(enPaths.home, enPaths.zh, enPaths.home)
+  pushUrl(enPaths.home, enPaths.zh, enPaths.home, 0.8)
 
   for (const doc of docs) {
     const descZh = app.descs?.[doc.id]?.zh ?? doc.descZh
@@ -251,10 +316,12 @@ const today = new Date().toISOString().slice(0, 10)
 const sitemap = [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
-  ...urls.flatMap(({ loc, zh, en }) => [
+  ...urls.flatMap(({ loc, zh, en, priority }) => [
     '  <url>',
     `    <loc>${loc}</loc>`,
     `    <lastmod>${today}</lastmod>`,
+    '    <changefreq>monthly</changefreq>',
+    `    <priority>${priority.toFixed(1)}</priority>`,
     `    <xhtml:link rel="alternate" hreflang="zh-CN" href="${zh}" />`,
     `    <xhtml:link rel="alternate" hreflang="en" href="${en}" />`,
     `    <xhtml:link rel="alternate" hreflang="x-default" href="${zh}" />`,

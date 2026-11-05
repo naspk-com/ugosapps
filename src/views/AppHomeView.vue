@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DocIcon from '@/components/DocIcon.vue'
 import { appBySlug, apps, categoryById } from '@/i18n/docs/apps'
@@ -60,10 +60,114 @@ const others = computed(() =>
       name: props.locale === 'en-US' ? item.name.en : item.name.zh,
     })),
 )
+
+/* 从应用图标拾取主色/辅色，作为本页强调色（失败时回退到全局 mint） */
+const rootEl = ref<HTMLElement | null>(null)
+
+type Rgb = [number, number, number]
+
+const rgba = (rgb: Rgb, alpha: number): string =>
+  `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`
+
+const toHex = (rgb: Rgb): string =>
+  `#${rgb.map((v) => v.toString(16).padStart(2, '0')).join('')}`
+
+const onColor = (rgb: Rgb): string => {
+  const luminance = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255
+  return luminance > 0.62 ? '#10231c' : '#ffffff'
+}
+
+const loadImage = (src: string): Promise<HTMLImageElement> =>
+  new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.src = src
+  })
+
+/* 缩小采样 + 颜色桶聚类：只取饱和的品牌色，白/黑/灰像素全部剔除 */
+const extractPalette = (img: HTMLImageElement): Rgb[] => {
+  const size = 48
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  if (!ctx) return []
+  ctx.drawImage(img, 0, 0, size, size)
+  const { data } = ctx.getImageData(0, 0, size, size)
+
+  interface Bucket {
+    rgb: Rgb
+    count: number
+  }
+  const vivid = new Map<string, Bucket>()
+  const tinted = new Map<string, Bucket>()
+
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i + 3] < 125) continue
+    const r = data[i]
+    const g = data[i + 1]
+    const b = data[i + 2]
+    const max = Math.max(r, g, b)
+    const min = Math.min(r, g, b)
+    const range = max - min
+    /* 剔除近白、近黑与中性灰 */
+    if ((max > 240 && min > 200) || max < 30 || range < 30) continue
+    const key = `${r >> 4}-${g >> 4}-${b >> 4}`
+    const target = range >= 60 ? vivid : tinted
+    const bucket = target.get(key)
+    if (bucket) {
+      bucket.count += 1
+      bucket.rgb = [bucket.rgb[0] + r, bucket.rgb[1] + g, bucket.rgb[2] + b]
+    } else {
+      target.set(key, { rgb: [r, g, b], count: 1 })
+    }
+  }
+
+  const pool = vivid.size > 0 ? vivid : tinted
+  return [...pool.values()]
+    .sort((x, y) => y.count - x.count)
+    .slice(0, 6)
+    .map(
+      (bucket) =>
+        [
+          Math.round(bucket.rgb[0] / bucket.count),
+          Math.round(bucket.rgb[1] / bucket.count),
+          Math.round(bucket.rgb[2] / bucket.count),
+        ] as Rgb,
+    )
+}
+
+const applyAppColor = async (): Promise<void> => {
+  const el = rootEl.value
+  const current = app.value
+  if (!el || !current) return
+  try {
+    const img = await loadImage(current.icon)
+    const [primary, secondary] = extractPalette(img)
+    if (!primary) return
+    el.style.setProperty('--app-1', toHex(primary))
+    el.style.setProperty('--app-glow', rgba(primary, 0.42))
+    el.style.setProperty('--app-tint', rgba(primary, 0.14))
+    el.style.setProperty('--app-line', rgba(primary, 0.45))
+    el.style.setProperty('--app-on', onColor(primary))
+    if (secondary) el.style.setProperty('--app-2', toHex(secondary))
+  } catch {
+    /* 拾色失败时保持默认主题色 */
+  }
+}
+
+onMounted(() => {
+  void applyAppColor()
+})
+
+watch(app, () => {
+  void applyAppColor()
+})
 </script>
 
 <template>
-  <div v-if="app" class="wrap app-home">
+  <div v-if="app" ref="rootEl" class="wrap app-home">
     <nav class="crumbs" :aria-label="t('appHome.back')">
       <a :href="homePath(locale)">{{ t('nav.home') }}</a>
       <span aria-hidden="true">/</span>
