@@ -41,9 +41,21 @@ export const parsePath = (pathname: string): Route => {
 export const route = ref<Route>(parsePath(window.location.pathname))
 export const currentPath = ref(window.location.pathname + window.location.search)
 
+declare global {
+  interface Window {
+    _hmt?: [string, ...unknown[]][]
+  }
+}
+
+const trackPageview = (): void => {
+  window._hmt = window._hmt || []
+  window._hmt.push(['_trackPageview', window.location.pathname + window.location.search])
+}
+
 const sync = (): void => {
   route.value = parsePath(window.location.pathname)
   currentPath.value = window.location.pathname + window.location.search
+  trackPageview()
 }
 
 window.addEventListener('popstate', sync)
