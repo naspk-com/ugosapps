@@ -2,13 +2,13 @@ export default {
   site: {
     name: 'NASPK · Apps for UGREEN NAS',
     brand: 'UGOS Pro Apps',
-    tagline: 'Apps built for UGREEN NAS',
+    tagline: 'Side-load apps for UGREEN NAS',
     skip: 'Skip to content',
   },
   nav: {
     product: 'Our approach',
     apps: 'Apps',
-    install: 'Install',
+    install: 'Side-load',
     faq: 'FAQ',
     home: 'Home',
     privacy: 'Privacy',
@@ -27,12 +27,17 @@ export default {
     auto: 'System',
   },
   home: {
-    eyebrow: 'UGOS Pro · Independent developer',
-    title: 'Apps built for',
-    accent: 'UGREEN NAS',
-    lead: 'NASPK builds and adapts apps for UGREEN NAS (UGOS Pro). Today that means ten cloud drive tools plus domain and network management — and more app types are on the way, held to the same standard.',
-    primary: 'Browse every app',
-    secondary: 'See how we build',
+    eyebrow: 'UGOS Pro · Independent developer · Self-distributed',
+    title: 'For UGREEN NAS users,',
+    accent: 'a richer app market, a better experience',
+    lead: 'NASPK is an independent third-party developer: these apps cannot be listed in the official UGREEN App Center and are distributed only by us. Request developer authorization for your UGREEN NAS first, then side-load the .upk package manually.',
+    primary: 'See authorization and install steps',
+    secondary: 'Browse every app',
+    notice: {
+      tag: 'Not in the official store',
+      kicker: 'Not in the official store · developer authorization, then side-load',
+      cta: 'See the full process',
+    },
     stats: {
       apps: 'apps',
       cloudApps: 'cloud drives',
@@ -40,14 +45,14 @@ export default {
       langs: 'languages',
     },
     featuresIndex: 'Our approach',
-    featuresTitle: 'One standard behind every app',
+    featuresTitle: 'Self-distributed, same standard',
     featuresLead:
-      'Whatever the app type, it ships as a native UGOS Pro app: installed from the App Center, launched from the desktop, running in a system window under the same account and permission model.',
+      'Whatever the app type, it ships as a native UGOS Pro app: side-loaded manually from the App Center, launched from the desktop, running in a system window under the same account and permission model.',
     features: [
       {
         num: '01',
         title: 'Native, not a Docker wrapper',
-        desc: 'Distributed as .upk packages through the App Center; desktop icons, window management and gateway authentication all use native UGOS Pro capabilities.',
+        desc: 'Distributed as .upk packages that you install manually in the App Center; desktop icons, window management and gateway authentication all use native UGOS Pro capabilities.',
       },
       {
         num: '02',
@@ -71,8 +76,8 @@ export default {
       },
       {
         num: '06',
-        title: 'A growing app catalog',
-        desc: 'Ten cloud drive tools lead today, while UniLink and Cloudflare Tunnel cover domains and network management. More app types will follow.',
+        title: 'Maintenance only for now',
+        desc: 'Until UGREEN opens third-party side-loading, we only update and maintain the apps already built and adapted. No new apps will be adapted.',
       },
     ],
     native: {
@@ -85,15 +90,16 @@ export default {
     more: {
       chip1: 'Cloud drives',
       chip2: 'Domains & network',
-      chip3: 'More types coming',
+      chip3: 'No new apps for now',
     },
     marqueeLabel: 'App overview',
     marqueeNote: 'Every app links to its own page',
     appsIndex: 'Catalog',
-    appsTitle: 'Apps available today',
-    appsLead: 'Filter by category or search by name and ID. Every app has its own page with an overview, sign-in method and more.',
+    appsTitle: 'Apps available to side-load',
+    appsLead:
+      'Filter by category or search by name and ID. These apps are not in the official UGREEN App Center; open an app page for its package and authorization details.',
     appsDisclaimer:
-      'NASPK is an independent third-party developer with no affiliation with or agency for UGREEN, and does not represent UGREEN. UGREEN, UGOS and related names belong to their respective owners.',
+      'NASPK is an independent third-party developer with no affiliation with or agency for UGREEN, and does not represent UGREEN. None of these apps are listed in the official UGREEN App Center; they are self-distributed by NASPK and require the device owner to obtain developer authorization before installing. UGREEN, UGOS and related names belong to their respective owners.',
     allApps: 'All',
     filterLabel: 'Filter apps by category',
     searchLabel: 'Search apps',
@@ -101,45 +107,59 @@ export default {
     emptyTitle: 'No matching apps',
     emptyDesc: 'Try another keyword or category, or clear the filters to see every app.',
     clear: 'Clear filters',
-    stepsIndex: 'Install',
-    stepsTitle: 'Three steps onto your UGREEN NAS',
+    stepsIndex: 'Side-load',
+    stepsTitle: 'Four steps to a side-loaded app',
     stepsLead:
-      'Cloud drives, domain management and tunnelling all follow the same path: install from the App Center, open it from the desktop, and use it like a built-in app.',
+      'Cloud drives, domain management and tunnelling follow the same path: get developer authorization first, install the .upk manually in the App Center, then open it from the desktop like a built-in app.',
+    stepsPrereq: 'Required first',
     steps: [
       {
         num: '01',
-        title: 'Install from the App Center',
-        desc: 'Search for the app name or ID and pick the matching .upk package; both amd64 and arm64 are available and updates arrive with the package.',
+        title: 'Request developer authorization',
+        desc: 'Email UGREEN with your NAS serial number, MAC address (Control Panel → About) and admin username to request developer authorization for that device.',
       },
       {
         num: '02',
-        title: 'Authorize folders and sign in',
-        desc: 'Apps that read or write local folders need explicit authorization under App Settings → Folder Authorization; then bind an account or API credential the app supports.',
+        title: 'Authorize the device',
+        desc: 'Rename the authorization file to ugdev.sig and upload it to the admin user folder. On UGOS Pro 1.16.0.0000 and later, also finish device authorization under App Center → Settings → App Development Settings.',
       },
       {
         num: '03',
-        title: 'Open it from the desktop',
-        desc: 'Launch it from the desktop icon or the App Center. Windows, system account and UI language follow UGOS — no browser or extra server required.',
+        title: 'Install the .upk manually',
+        desc: 'Choose "Manual install" in the App Center and import the package for your architecture (amd64 or arm64). These apps never appear in the official store search.',
+      },
+      {
+        num: '04',
+        title: 'Authorize folders and sign in',
+        desc: 'Apps that read or write local folders need explicit authorization under App Settings → Folder Authorization; then bind an account or API credential the app supports and open it from the desktop icon.',
       },
     ],
     faqIndex: 'FAQ',
     faqTitle: 'Frequently asked questions',
     faq: [
       {
+        q: 'Why can I not find these apps in the UGREEN App Center?',
+        a: 'These apps cannot be listed in the official UGREEN App Center and are self-distributed by NASPK. They never enter the store search or update list, so you need developer authorization and a manual .upk install from the App Center.',
+      },
+      {
+        q: 'How do I get developer authorization for my UGREEN NAS?',
+        a: 'Email UGREEN with your device serial number, MAC address (Control Panel → About) and admin username. After receiving the authorization file, upload it as described in the install steps and finish device authorization under App Center → Settings → App Development Settings.',
+      },
+      {
         q: 'How is NASPK related to UGREEN?',
-        a: 'NASPK is an independent third-party developer. These apps are developed and adapted by us; they are not official UGREEN products and do not represent UGREEN.',
+        a: 'NASPK is an independent third-party developer. These apps are developed and adapted by us, are not listed in the official UGREEN App Center, and are not official UGREEN products.',
       },
       {
-        q: 'Will there be other types of apps?',
-        a: 'Yes. Ten cloud drive tools lead today, with UniLink and Cloudflare Tunnel already covering domains and network management; more app types will follow under the same standard.',
+        q: 'What should I keep in mind when side-loading?',
+        a: 'Side-loading skips the official store review. Only take packages from this site or our official community group, and check the app ID and version before installing. Installing, updating and removing the app is your decision, and expired developer authorization must be renewed.',
       },
       {
-        q: 'Which models are supported?',
-        a: 'Any UGREEN NAS that can install UGOS Pro apps. Packages are built for both amd64 and arm64.',
+        q: 'Which models and platforms are supported?',
+        a: 'Any UGREEN NAS that can install UGOS Pro apps manually; packages are built for both amd64 and arm64. Current releases target the UGREEN desktop client and PC browsers, while phone apps open the page in the system browser.',
       },
       {
-        q: 'Why desktop only for now?',
-        a: 'Current releases target the UGREEN desktop client and PC browsers. Phone apps open the page in the system browser; there is no dedicated mobile entry yet.',
+        q: 'Will you adapt new apps later?',
+        a: 'Until UGREEN opens third-party side-loading, we only update and maintain the apps already built and adapted; no new apps will be adapted.',
       },
       {
         q: 'What happens to my data after uninstalling?',
@@ -149,7 +169,7 @@ export default {
     communityIndex: 'Community',
     communityTitle: 'Join our QQ group',
     communityLead:
-      'Install, folder authorisation, account binding, playback and backup questions are all welcome in the group, or email us.',
+      'Developer authorization, side-loading, folder authorization and account binding questions are all welcome in the group, or email us.',
     communityJoin: 'Join QQ group',
   },
   docDesc: {
@@ -161,7 +181,20 @@ export default {
   appHome: {
     back: 'Back to apps',
     eyebrow: 'NASPK App',
-    lead: '{name} ({id}) is built and adapted by NASPK for UGREEN NAS. Install it, open it from the desktop, and skip Docker or extra servers.',
+    download: 'Download .upk',
+    downloadModal: {
+      title: 'Scan the QR code to get the download link',
+      desc: 'Scan with WeChat to follow the 尘墨成 official account, then send any keyword below in the chat to receive the .upk download link for {name}.',
+      qrAlt: '尘墨成 WeChat official account QR code',
+      qrHint: 'Scan with WeChat · long-press the QR code to save',
+      keywords: 'Keywords (click to copy)',
+      copied: 'Copied',
+      note: 'Send the keyword in full; matching is case-insensitive. If you get no reply, make sure you follow the account and try again.',
+      close: 'Close',
+    },
+    lead: '{name} ({id}) is built and adapted by NASPK for UGREEN NAS. It is not listed in the official UGREEN App Center: request developer authorization first, then side-load the package manually.',
+    installNote:
+      'This app is not in the official UGREEN App Center. Request developer authorization for your NAS first, then import the .upk package with "Manual install" in the App Center.',
     nativeTag: 'Native UGOS app',
     highlightsIndex: 'Features',
     highlightsTitle: 'What {name} can do',
@@ -197,7 +230,7 @@ export default {
     moreDesc: 'Switch to another app page.',
     moreAll: 'Browse every app',
     closure:
-      'This app is closed-source software; no source repository or download address is provided. Details follow each release; the App Center listing is authoritative.',
+      'This app is closed-source software; no source repository or download address is provided. It is not listed in the official UGREEN App Center and requires developer authorization to install; details follow each release and this site plus the app are authoritative.',
   },
   doc: {
     toc: 'On this page',
@@ -218,7 +251,7 @@ export default {
     hint: 'Popular entries: ',
   },
   footer: {
-    tagline: 'Native apps built for UGREEN NAS (UGOS Pro).',
+    tagline: 'Native apps for UGREEN NAS (UGOS Pro), self-distributed outside the official store.',
     summary: '{apps} apps · {cloud} cloud drives · {types} categories',
     catalogTitle: 'Apps',
     resourceTitle: 'Resources',
@@ -240,6 +273,7 @@ export default {
     note: 'Documents are maintained per app; changes update the "Last updated" date on the corresponding page.',
     icp: '浙ICP备2021030970号-5',
     rights: 'All rights reserved',
-    disclaimer: 'NASPK is an independent third-party developer with no affiliation or agency with UGREEN.',
+    disclaimer:
+      'NASPK is an independent third-party developer with no affiliation or agency with UGREEN. These apps are not in the official UGREEN App Center and require developer authorization before side-loading.',
   },
 }

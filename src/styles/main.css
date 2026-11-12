@@ -26,6 +26,10 @@
   --periwinkle-line: rgba(79, 89, 201, 0.26);
   --tag-text: #3b43a8;
   --danger: #c0342f;
+  --amber: #96610f;
+  --amber-dim: rgba(150, 97, 15, 0.1);
+  --amber-line: rgba(150, 97, 15, 0.3);
+  --amber-wash: rgba(150, 97, 15, 0.055);
   --on-mint: #f2fff9;
   --mint-btn-bg: linear-gradient(122deg, #14a276, #0a7a58 55%, #0e8f68);
   --solid: #ffffff;
@@ -42,6 +46,15 @@
   --inset-highlight: rgba(255, 255, 255, 0.9);
   --orb-core-bg: radial-gradient(circle at 32% 26%, #ffffff, rgba(15, 23, 42, 0.04));
   --aurora-opacity: 0.2;
+  /* 应用页主题色：由页面按 logo 主色注入后覆盖，默认跟随站点主题 */
+  --app-1: var(--mint);
+  --app-2: var(--mint);
+  --app-glow: var(--mint-glow);
+  --app-tint: var(--mint-dim);
+  --app-line: var(--mint-line);
+  --app-on: var(--on-mint);
+  --aurora-1: rgba(111, 242, 192, 0.5);
+  --aurora-2: rgba(120, 132, 255, 0.5);
   --footer-grad: linear-gradient(180deg, transparent, rgba(15, 23, 42, 0.025));
   --radius: 22px;
   --radius-sm: 14px;
@@ -82,6 +95,10 @@ html.dark {
   --periwinkle-line: rgba(139, 149, 255, 0.28);
   --tag-text: #c3c9ff;
   --danger: #ff8f8f;
+  --amber: #f0c07a;
+  --amber-dim: rgba(240, 192, 122, 0.14);
+  --amber-line: rgba(240, 192, 122, 0.32);
+  --amber-wash: rgba(240, 192, 122, 0.07);
   --on-mint: #04140e;
   --mint-btn-bg: linear-gradient(122deg, #8dfbd2, #6ff2c0 55%, #a9f7de);
   --solid: rgba(12, 15, 21, 0.9);
@@ -190,13 +207,13 @@ h4 {
 .aurora::before {
   top: -26vw;
   left: -14vw;
-  background: radial-gradient(circle, rgba(111, 242, 192, 0.5), transparent 62%);
+  background: radial-gradient(circle, var(--aurora-1), transparent 62%);
 }
 
 .aurora::after {
   top: -12vw;
   right: -22vw;
-  background: radial-gradient(circle, rgba(120, 132, 255, 0.5), transparent 64%);
+  background: radial-gradient(circle, var(--aurora-2), transparent 64%);
 }
 
 body::before {
@@ -516,6 +533,80 @@ body::before {
   border-bottom: 1px solid var(--line-strong);
 }
 
+/* ---------- sideload notice ---------- */
+
+.sideload-tag {
+  flex: none;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--amber-line);
+  background: var(--amber-dim);
+  color: var(--amber);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.hero-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 10px;
+  color: var(--amber);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.hero-kicker-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 3px var(--amber-dim);
+}
+
+.app-install-note {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 18px 0 0;
+  padding: 14px 18px;
+  border: 1px solid var(--amber-line);
+  border-radius: var(--radius-sm);
+  background: var(--amber-wash);
+}
+
+.app-install-note p {
+  flex: 1 1 280px;
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.app-install-note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--amber);
+  font-size: 0.84rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.app-install-note a:hover {
+  color: var(--text);
+}
+
+.app-install-note .doc-icon {
+  width: 15px;
+  height: 15px;
+}
+
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -563,7 +654,7 @@ body::before {
 
 .orb {
   position: relative;
-  width: min(100%, 460px);
+  width: min(100%, 620px);
   aspect-ratio: 1;
   margin: 0 auto;
   container-type: size;
@@ -625,9 +716,9 @@ body::before {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 54px;
-  height: 54px;
-  margin: -27px 0 0 -27px;
+  width: 70px;
+  height: 70px;
+  margin: -35px 0 0 -35px;
   transform: rotate(var(--a)) translate(0, calc(-1 * var(--r))) rotate(calc(-1 * var(--a)));
 }
 
@@ -636,7 +727,7 @@ body::before {
   place-items: center;
   width: 100%;
   height: 100%;
-  border-radius: 16px;
+  border-radius: 18px;
   background: var(--solid);
   border: 1px solid var(--line);
   box-shadow: 0 16px 34px -20px var(--shadow);
@@ -645,9 +736,9 @@ body::before {
 }
 
 .orb-icon-inner img {
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
   object-fit: contain;
   transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
@@ -1213,7 +1304,7 @@ body::before {
 
 .steps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -1224,6 +1315,27 @@ body::before {
   border: 1px solid var(--line);
   background: var(--field);
   overflow: hidden;
+}
+
+.step.is-prereq {
+  border-color: var(--amber-line);
+  background:
+    linear-gradient(180deg, var(--amber-wash), transparent 70%),
+    var(--field);
+}
+
+.step-flag {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--amber-line);
+  background: var(--amber-dim);
+  color: var(--amber);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .step-num {
@@ -2050,13 +2162,6 @@ tbody tr:hover {
 /* ---------- app landing ---------- */
 
 .app-home {
-  /* 应用主题色默认值（拾色成功后由 node-vibrant 注入覆盖） */
-  --app-1: var(--mint);
-  --app-2: var(--mint);
-  --app-glow: var(--mint-glow);
-  --app-tint: var(--mint-dim);
-  --app-line: var(--mint-line);
-  --app-on: var(--on-mint);
   padding-bottom: 8px;
 }
 
@@ -2073,8 +2178,8 @@ tbody tr:hover {
   position: relative;
   display: grid;
   place-items: center;
-  width: 184px;
-  height: 184px;
+  width: 264px;
+  height: 264px;
 }
 
 .app-landing-glow {
@@ -2088,10 +2193,10 @@ tbody tr:hover {
 
 .app-landing-mark {
   position: relative;
-  width: 160px;
-  height: 160px;
+  width: 224px;
+  height: 224px;
   border: 1px solid var(--line);
-  border-radius: 38px;
+  border-radius: 65px;
   background: var(--field);
   box-shadow: 0 30px 60px -30px var(--app-glow);
   object-fit: contain;
@@ -2175,6 +2280,73 @@ tbody tr:hover {
 
 .app-home .app-aside-link {
   color: var(--app-1);
+}
+
+/* 其余强调色同样跟随应用 logo 主题色 */
+.app-home .eyebrow {
+  color: var(--app-1);
+}
+
+.app-home .eyebrow::before {
+  background: linear-gradient(90deg, var(--app-1), transparent);
+}
+
+.app-home .section-index {
+  color: var(--app-1);
+}
+
+.app-home .app-landing-mark {
+  border-color: var(--app-line);
+}
+
+.app-home .app-specs-card {
+  border-color: var(--app-line);
+  box-shadow: inset 0 1px 0 var(--inset-highlight), 0 22px 50px -34px var(--app-glow);
+}
+
+.app-home .doc-card:hover {
+  border-color: var(--app-line);
+}
+
+.app-home .doc-icon-tile {
+  border-color: var(--app-line);
+  background: var(--app-tint);
+  color: var(--app-1);
+}
+
+.app-home .doc-open {
+  color: var(--app-1);
+}
+
+.app-home .chip:hover {
+  border-color: var(--app-line);
+  color: var(--app-1);
+}
+
+.app-home .info-table a {
+  color: var(--app-1);
+}
+
+.app-home .info-table a:hover {
+  color: var(--text);
+}
+
+.app-home .crumbs a:hover {
+  color: var(--app-1);
+}
+
+.app-home .dl-keyword {
+  border-color: var(--app-line);
+  background: var(--app-tint);
+  color: var(--app-1);
+}
+
+.app-home .dl-keyword:hover {
+  border-color: var(--app-1);
+}
+
+.app-home .dl-copied {
+  color: var(--muted);
 }
 
 .app-cta {
@@ -2404,12 +2576,208 @@ tbody tr:hover {
   transform: none;
 }
 
+/* ---------- download modal ---------- */
+
+.dl-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(6, 10, 18, 0.55);
+  backdrop-filter: blur(6px);
+  animation: dl-fade 0.18s ease;
+}
+
+.dl-dialog {
+  position: relative;
+  width: min(760px, 100%);
+  max-height: min(86vh, 760px);
+  overflow-y: auto;
+  padding: 32px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--solid);
+  box-shadow: var(--shadow-lift);
+}
+
+.dl-dialog h2 {
+  margin: 0 0 8px;
+  padding-right: 44px;
+  font-size: clamp(1.25rem, 2.4vw, 1.62rem);
+  letter-spacing: -0.01em;
+}
+
+.dl-desc {
+  margin: 0 0 24px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.dl-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--field);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.dl-close:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+.dl-close svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.dl-body {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 26px;
+  align-items: start;
+}
+
+.dl-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--field);
+}
+
+.dl-qr img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  background: #fff;
+  -webkit-touch-callout: default;
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+.dl-qr span {
+  color: var(--faint);
+  font-size: 0.78rem;
+}
+
+.dl-keywords-label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--faint);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+
+.dl-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dl-keyword {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--mint-line);
+  background: var(--mint-dim);
+  color: var(--mint);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.dl-keyword:hover {
+  background: var(--mint-wash);
+  border-color: var(--mint);
+}
+
+.dl-copied {
+  color: var(--faint);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.dl-note {
+  margin: 16px 0 0;
+  color: var(--faint);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 719px) {
+  .dl-overlay {
+    padding: 16px;
+  }
+
+  .dl-dialog {
+    padding: 24px 20px;
+  }
+
+  .dl-body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .dl-qr {
+    width: min(100%, 240px);
+    margin: 0 auto;
+  }
+}
+
+@keyframes dl-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 1080px) {
   .hero {
     grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
     gap: 24px;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-landing-mark-wrap {
+    width: 200px;
+    height: 200px;
+  }
+
+  .app-landing-mark {
+    width: 172px;
+    height: 172px;
+    border-radius: 40px;
   }
 
   .bento-card,
@@ -2445,9 +2813,7 @@ tbody tr:hover {
   }
 
   .hero-visual {
-    order: -1;
-    max-width: 380px;
-    margin: 0 auto;
+    display: none;
   }
 
   .doc-layout {
@@ -2487,6 +2853,17 @@ tbody tr:hover {
     grid-template-columns: auto minmax(0, 1fr);
     gap: 24px;
     padding-top: 38px;
+  }
+
+  .app-landing-mark-wrap {
+    width: 200px;
+    height: 200px;
+  }
+
+  .app-landing-mark {
+    width: 172px;
+    height: 172px;
+    border-radius: 40px;
   }
 
   .app-specs-card {
@@ -2531,6 +2908,7 @@ tbody tr:hover {
 
   .nav {
     order: 3;
+    flex: 0 0 100%;
     width: 100%;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -2591,28 +2969,53 @@ tbody tr:hover {
 
   .app-landing {
     grid-template-columns: 1fr;
-    justify-items: start;
+    justify-items: center;
     gap: 18px;
+    text-align: center;
+  }
+
+  .app-landing-copy {
+    width: 100%;
+  }
+
+  .app-tagline {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .app-badges {
+    justify-content: center;
   }
 
   .app-landing-mark-wrap {
-    width: 132px;
-    height: 132px;
+    width: 168px;
+    height: 168px;
   }
 
   .app-landing-mark {
-    width: 112px;
-    height: 112px;
-    border-radius: 28px;
+    width: 144px;
+    height: 144px;
+    border-radius: 34px;
   }
 
   .app-landing-copy h1 {
     font-size: 2rem;
   }
 
+  .app-cta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
   .app-cta .btn {
-    flex: 1;
     justify-content: center;
+    white-space: nowrap;
+  }
+
+  .app-specs-card {
+    width: 100%;
+    text-align: left;
   }
 
   .feature-grid {

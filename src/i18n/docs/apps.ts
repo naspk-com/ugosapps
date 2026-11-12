@@ -56,6 +56,8 @@ export interface AppInfo {
   portal?: string
   portalLabel?: string
   login: Localized
+  /** WeChat official-account keywords that return this app's download link */
+  downloadKeywords: string[]
   /** The Thunder app ships a proprietary Xunlei engine */
   thunderEngine?: boolean
   /** Domain / DNS management tool, uses its own document set */
@@ -69,8 +71,8 @@ export interface AppInfo {
 const native: Highlight = {
   title: { zh: '原生 UGOS 应用', en: 'Native UGOS app' },
   desc: {
-    zh: '以 .upk 应用商店安装包交付，从桌面图标打开，窗口与账号走 UGOS 原生能力，不是 Docker 套壳。',
-    en: 'Delivered as a .upk App Center package and opened from the desktop icon, using native UGOS windows and accounts — not a Docker wrapper.',
+    zh: '以 .upk 安装包自行分发，在应用中心手动侧载安装，从桌面图标打开，窗口与账号走 UGOS 原生能力，不是 Docker 套壳。',
+    en: 'Distributed as a .upk package and side-loaded manually through the App Center, then opened from the desktop icon with native UGOS windows and accounts — not a Docker wrapper.',
   },
 }
 
@@ -227,6 +229,7 @@ export const apps: AppInfo[] = [
     highlights: [native, member, files, transfer, media, backup],
     version: '1.0.1',
     port: 21010,
+    downloadKeywords: ['绿联移动云盘', '绿联移动网盘', '绿联移动'],
     help: 'https://ugosapps.naspk.com/yun139/support.html',
     portal: 'https://yun.139.com',
     portalLabel: 'yun.139.com',
@@ -246,6 +249,7 @@ export const apps: AppInfo[] = [
     highlights: [native, files, transfer, media, shareSave, backup],
     version: '1.0.1',
     port: 21011,
+    downloadKeywords: ['绿联阿里云盘', '绿联阿里网盘', '绿联阿里云', '绿联阿里'],
     help: 'https://ugosapps.naspk.com/alipan/support.html',
     portal: 'https://www.alipan.com',
     portalLabel: 'www.alipan.com',
@@ -265,6 +269,16 @@ export const apps: AppInfo[] = [
     highlights: [native, files, transfer, media, shareCreate, backup],
     version: '1.0.1',
     port: 21012,
+    downloadKeywords: [
+      '绿联天翼云盘',
+      '绿联天翼网盘',
+      '绿联电信云盘',
+      '绿联电信网盘',
+      '绿联天翼',
+      '绿联电信',
+      '绿联电信云',
+      '绿联天翼云',
+    ],
     help: 'https://ugosapps.naspk.com/cloud189/support.html',
     portal: 'https://cloud.189.cn',
     portalLabel: 'cloud.189.cn',
@@ -284,7 +298,10 @@ export const apps: AppInfo[] = [
     highlights: [native, files, transfer, media, shareCreate, backup],
     version: '1.0.1',
     port: 21013,
+    downloadKeywords: ['绿联光鸭云盘', '绿联光鸭网盘', '绿联光鸭'],
     help: 'https://ugosapps.naspk.com/guangyapan/support.html',
+    portal: 'https://www.guangyapan.com',
+    portalLabel: 'www.guangyapan.com',
     login: { zh: '账号密码或 Cookie', en: 'account password or cookie' },
   },
   {
@@ -301,6 +318,7 @@ export const apps: AppInfo[] = [
     highlights: [native, files, transfer, media, shareSave, backup],
     version: '1.0.0',
     port: 21014,
+    downloadKeywords: ['绿联115网盘', '绿联115云盘', '绿联115'],
     help: 'https://ugosapps.naspk.com/pan115/support.html',
     portal: 'https://115.com',
     portalLabel: '115.com',
@@ -320,6 +338,7 @@ export const apps: AppInfo[] = [
     highlights: [native, filesBasic, transfer, media, shareCreate, backup],
     version: '1.0.1',
     port: 21015,
+    downloadKeywords: ['绿联123云盘', '绿联123网盘', '绿联123'],
     help: 'https://ugosapps.naspk.com/pan123/support.html',
     portal: 'https://www.123pan.com',
     portalLabel: 'www.123pan.com',
@@ -339,6 +358,7 @@ export const apps: AppInfo[] = [
     highlights: [native, files, transfer, media, shareSave, backup],
     version: '1.0.0',
     port: 21016,
+    downloadKeywords: ['绿联夸克网盘', '绿联夸克云盘', '绿联夸克'],
     help: 'https://ugosapps.naspk.com/quark/support.html',
     portal: 'https://pan.quark.cn',
     portalLabel: 'pan.quark.cn',
@@ -358,6 +378,7 @@ export const apps: AppInfo[] = [
     highlights: [native, offline, files, transfer, media, backup],
     version: '1.0.1',
     port: 21017,
+    downloadKeywords: ['绿联迅雷云盘', '绿联迅雷网盘', '绿联迅雷'],
     help: 'https://ugosapps.naspk.com/thunder/support.html',
     portal: 'https://www.xunlei.com',
     portalLabel: 'www.xunlei.com',
@@ -378,6 +399,7 @@ export const apps: AppInfo[] = [
     highlights: [native, files, transfer, media, shareSave, backup],
     version: '1.0.0',
     port: 21018,
+    downloadKeywords: ['绿联UC云盘', '绿联UC网盘', '绿联UC'],
     help: 'https://ugosapps.naspk.com/ucpan/support.html',
     portal: 'https://drive.uc.cn',
     portalLabel: 'drive.uc.cn',
@@ -397,6 +419,7 @@ export const apps: AppInfo[] = [
     highlights: [native, files, transfer, media, shareCreate, backup],
     version: '1.0.0',
     port: 21019,
+    downloadKeywords: ['绿联联通云盘', '绿联联通网盘', '绿联联通云', '绿联联通'],
     help: 'https://ugosapps.naspk.com/wopan/support.html',
     portal: 'https://pan.wo.cn',
     portalLabel: 'pan.wo.cn',
@@ -416,6 +439,7 @@ export const apps: AppInfo[] = [
     highlights: [native, multiRegistrar, dnsRecords, ssl, ddns, localCreds],
     version: '1.0.0',
     port: 21020,
+    downloadKeywords: ['绿联域联', '绿联域联UniLink', '绿联UniLink'],
     help: 'https://ugosapps.naspk.com/unilink/help.html',
     portal: 'https://www.dustinky.com',
     portalLabel: 'www.dustinky.com',
@@ -439,6 +463,18 @@ export const apps: AppInfo[] = [
     highlights: [native, noPorts, ingress, liveLogs, localCreds],
     version: '1.0.0',
     port: 21021,
+    downloadKeywords: [
+      '绿联CFTunnel',
+      '绿联Cloudflare Tunnel',
+      '绿联CloudflareTunnel',
+      '绿联cloudflare tunnel',
+      '绿联cloudflaretunnel',
+      '绿联cftunnel',
+      '绿联Tunnel',
+      '绿联tunnel',
+      '绿联Cloudflare tunnel',
+      '绿联cloudflare Tunnel',
+    ],
     help: 'https://tunnel.naspk.com/',
     portal: 'https://www.cloudflare.com',
     portalLabel: 'www.cloudflare.com',

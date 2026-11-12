@@ -105,8 +105,8 @@ const homeBody = (locale) => {
   const heading = locale === 'zh' ? 'NASPK · 绿联 NAS 应用' : 'NASPK · Apps for UGREEN NAS'
   const intro =
     locale === 'zh'
-      ? 'NASPK 专注为绿联 NAS（UGOS Pro）开发与适配应用：当前包括 10 款云盘工具与域名、网络管理工具，更多类型持续加入。'
-      : 'NASPK builds apps for UGREEN NAS (UGOS Pro): ten cloud drive tools plus domain and network management, with more on the way.'
+      ? 'NASPK 是独立的第三方开发者，为绿联 NAS（UGOS Pro）开发应用。这些应用未上架绿联官方应用商店，需先为设备取得开发者授权，再通过应用中心手动侧载 .upk 安装包。'
+      : 'NASPK is an independent third-party developer building apps for UGREEN NAS (UGOS Pro). These apps are not listed in the official UGREEN App Center: request developer authorization for your device, then side-load the .upk package manually.'
   const items = apps
     .map(
       (app) =>
@@ -264,7 +264,7 @@ await writePage(
     locale: 'en',
     title: 'NASPK · Apps for UGREEN NAS',
     description:
-      'NASPK is an independent developer building apps for UGREEN NAS (UGOS Pro): cloud drive tools, domain and network management, with more app types on the way.',
+      'NASPK is an independent third-party developer building apps for UGREEN NAS (UGOS Pro). These apps are self-distributed outside the official store and require developer authorization before side-loading.',
     selfUrl: `${site}/en/index.html`,
     alternates: { zh: `${site}/`, en: `${site}/en/index.html` },
     body: homeBody('en'),

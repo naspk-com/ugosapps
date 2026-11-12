@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DocIcon from '@/components/DocIcon.vue'
 import { appBySlug, apps, categoryById } from '@/i18n/docs/apps'
 import { docPath, homePath } from '@/i18n/docs'
 import { docIds, type LocaleCode } from '@/i18n/docs/types'
+import { isDark } from '@/theme'
 
 const props = defineProps<{ locale: LocaleCode; slug: string }>()
 
@@ -62,7 +63,21 @@ const others = computed(() =>
 )
 
 /* 从应用图标拾取主色/辅色，作为本页强调色（失败时回退到全局 mint） */
-const rootEl = ref<HTMLElement | null>(null)
+const APP_COLOR_VARS = [
+  '--app-1',
+  '--app-2',
+  '--app-glow',
+  '--app-tint',
+  '--app-line',
+  '--app-on',
+  '--aurora-1',
+  '--aurora-2',
+] as const
+
+const resetAppColor = (): void => {
+  const root = document.documentElement
+  APP_COLOR_VARS.forEach((name) => root.style.removeProperty(name))
+}
 
 type Rgb = [number, number, number]
 
@@ -72,9 +87,48 @@ const rgba = (rgb: Rgb, alpha: number): string =>
 const toHex = (rgb: Rgb): string =>
   `#${rgb.map((v) => v.toString(16).padStart(2, '0')).join('')}`
 
-const onColor = (rgb: Rgb): string => {
-  const luminance = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255
-  return luminance > 0.62 ? '#10231c' : '#ffffff'
+const channelLuminance = (value: number): number => {
+  const c = value / 255
+  return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+}
+
+const luminanceOf = (rgb: Rgb): number =>
+  0.2126 * channelLuminance(rgb[0]) +
+  0.7152 * channelLuminance(rgb[1]) +
+  0.0722 * channelLuminance(rgb[2])
+
+const contrastRatio = (a: Rgb, b: Rgb): number => {
+  const la = luminanceOf(a)
+  const lb = luminanceOf(b)
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05)
+}
+
+const ON_LIGHT = '#10231c'
+const ON_DARK = '#ffffff'
+const onLightRgb: Rgb = [16, 35, 28]
+const whiteRgb: Rgb = [255, 255, 255]
+
+const onColor = (rgb: Rgb): string =>
+  contrastRatio(rgb, whiteRgb) >= contrastRatio(rgb, onLightRgb) ? ON_DARK : ON_LIGHT
+
+/* 亮色底要求深一些、暗色底要求浅一些，保证强调色当文字用时仍可读 */
+const readableAccent = (rgb: Rgb, dark: boolean): Rgb => {
+  const target = dark ? 0.42 : 0.17
+  const fits = (candidate: Rgb): boolean => {
+    const l = luminanceOf(candidate)
+    return dark ? l >= target : l <= target
+  }
+  if (fits(rgb)) return rgb
+  const toward = dark ? 255 : 0
+  let low = 0
+  let high = 1
+  for (let i = 0; i < 14; i += 1) {
+    const t = (low + high) / 2
+    const candidate = rgb.map((v) => Math.round(v + (toward - v) * t)) as Rgb
+    if (fits(candidate)) high = t
+    else low = t
+  }
+  return rgb.map((v) => Math.round(v + (toward - v) * high)) as Rgb
 }
 
 const loadImage = (src: string): Promise<HTMLImageElement> =>
@@ -138,20 +192,38 @@ const extractPalette = (img: HTMLImageElement): Rgb[] => {
     )
 }
 
+let paletteCache: { src: string; colors: Rgb[] } | null = null
+
+const getPalette = async (icon: string): Promise<Rgb[]> => {
+  if (paletteCache?.src === icon) return paletteCache.colors
+  const img = await loadImage(icon)
+  const colors = extractPalette(img)
+  paletteCache = { src: icon, colors }
+  return colors
+}
+
 const applyAppColor = async (): Promise<void> => {
-  const el = rootEl.value
   const current = app.value
-  if (!el || !current) return
+  if (!current) return
   try {
-    const img = await loadImage(current.icon)
-    const [primary, secondary] = extractPalette(img)
+    const colors = await getPalette(current.icon)
+    const [primary, secondary] = colors
     if (!primary) return
-    el.style.setProperty('--app-1', toHex(primary))
-    el.style.setProperty('--app-glow', rgba(primary, 0.42))
-    el.style.setProperty('--app-tint', rgba(primary, 0.14))
-    el.style.setProperty('--app-line', rgba(primary, 0.45))
-    el.style.setProperty('--app-on', onColor(primary))
-    if (secondary) el.style.setProperty('--app-2', toHex(secondary))
+    const accent = readableAccent(primary, isDark.value)
+    const root = document.documentElement
+    root.style.setProperty('--app-1', toHex(accent))
+    root.style.setProperty('--app-glow', rgba(primary, 0.42))
+    root.style.setProperty('--app-tint', rgba(primary, 0.14))
+    root.style.setProperty('--app-line', rgba(primary, 0.45))
+    root.style.setProperty('--app-on', onColor(accent))
+    root.style.setProperty('--aurora-1', rgba(primary, 0.5))
+    if (secondary) {
+      root.style.setProperty('--app-2', toHex(secondary))
+      root.style.setProperty('--aurora-2', rgba(secondary, 0.5))
+    } else {
+      root.style.removeProperty('--app-2')
+      root.style.removeProperty('--aurora-2')
+    }
   } catch {
     /* 拾色失败时保持默认主题色 */
   }
@@ -159,15 +231,49 @@ const applyAppColor = async (): Promise<void> => {
 
 onMounted(() => {
   void applyAppColor()
+  window.addEventListener('keydown', onKeydown)
 })
 
 watch(app, () => {
   void applyAppColor()
 })
+
+watch(isDark, () => {
+  void applyAppColor()
+})
+
+/* 下载弹层：展示公众号二维码与该应用可用的关键词 */
+const downloadOpen = ref(false)
+const copiedKeyword = ref('')
+
+const closeDownload = (): void => {
+  downloadOpen.value = false
+}
+
+const onKeydown = (event: KeyboardEvent): void => {
+  if (event.key === 'Escape') closeDownload()
+}
+
+const copyKeyword = async (keyword: string): Promise<void> => {
+  try {
+    await navigator.clipboard.writeText(keyword)
+    copiedKeyword.value = keyword
+    window.setTimeout(() => {
+      if (copiedKeyword.value === keyword) copiedKeyword.value = ''
+    }, 1600)
+  } catch {
+    copiedKeyword.value = ''
+  }
+}
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKeydown)
+  resetAppColor()
+})
 </script>
 
 <template>
-  <div v-if="app" ref="rootEl" class="wrap app-home">
+  <div v-if="app" class="wrap app-home">
     <nav class="crumbs" :aria-label="t('appHome.back')">
       <a :href="homePath(locale)">{{ t('nav.home') }}</a>
       <span aria-hidden="true">/</span>
@@ -190,7 +296,6 @@ watch(app, () => {
       </div>
 
       <div class="app-landing-copy">
-        <p class="eyebrow">{{ t('appHome.eyebrow') }}</p>
         <h1>{{ name }}</h1>
         <p class="app-tagline">{{ tagline }}</p>
         <div class="app-badges">
@@ -199,9 +304,13 @@ watch(app, () => {
           <span class="badge mono">{{ app.id }}</span>
         </div>
         <div class="app-cta">
+          <button type="button" class="btn btn-primary" @click="downloadOpen = true">
+            <DocIcon name="download" />
+            {{ t('appHome.download') }}
+          </button>
           <a
             v-if="app.portal"
-            class="btn btn-primary"
+            class="btn btn-ghost"
             :href="app.portal"
             target="_blank"
             rel="noopener"
@@ -239,6 +348,15 @@ watch(app, () => {
     </section>
 
     <p class="app-lead">{{ t('appHome.lead', { name, id: app.id }) }}</p>
+
+    <div class="app-install-note">
+      <span class="sideload-tag">{{ t('home.notice.tag') }}</span>
+      <p>{{ t('appHome.installNote') }}</p>
+      <a :href="`${homePath(locale)}#install`">
+        {{ t('home.notice.cta') }}
+        <DocIcon name="arrow" />
+      </a>
+    </div>
 
     <section class="section">
       <div class="section-head" data-reveal>
@@ -378,5 +496,63 @@ watch(app, () => {
         <a class="chip ghost" :href="`${homePath(locale)}#apps`">{{ t('appHome.moreAll') }}</a>
       </div>
     </section>
+
+    <div
+      v-if="downloadOpen"
+      class="dl-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="dl-title"
+      @click.self="closeDownload"
+    >
+      <div class="dl-dialog">
+        <button
+          type="button"
+          class="dl-close"
+          :aria-label="t('appHome.downloadModal.close')"
+          @click="closeDownload"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+
+        <h2 id="dl-title">{{ t('appHome.downloadModal.title') }}</h2>
+        <p class="dl-desc">{{ t('appHome.downloadModal.desc', { name }) }}</p>
+
+        <div class="dl-body">
+          <div class="dl-qr">
+            <img
+              src="/wechat-qrcode.jpg"
+              :alt="t('appHome.downloadModal.qrAlt')"
+              width="220"
+              height="220"
+              loading="lazy"
+              decoding="async"
+            />
+            <span>{{ t('appHome.downloadModal.qrHint') }}</span>
+          </div>
+
+          <div class="dl-keywords-block">
+            <span class="dl-keywords-label">{{ t('appHome.downloadModal.keywords') }}</span>
+            <div class="dl-keywords">
+              <button
+                v-for="keyword in app.downloadKeywords"
+                :key="keyword"
+                type="button"
+                class="dl-keyword"
+                @click="copyKeyword(keyword)"
+              >
+                {{ keyword }}
+                <span v-if="copiedKeyword === keyword" class="dl-copied">
+                  {{ t('appHome.downloadModal.copied') }}
+                </span>
+              </button>
+            </div>
+            <p class="dl-note">{{ t('appHome.downloadModal.note') }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

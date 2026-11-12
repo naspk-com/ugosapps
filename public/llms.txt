@@ -1,8 +1,8 @@
 ﻿# NASPK · 绿联 NAS 应用
 
-> NASPK 是独立的第三方开发者，专注为绿联 NAS（UGOS Pro）开发与适配应用：当前包括 10 款云盘工具与域名、网络管理工具，更多类型持续加入。站点提供每款应用的产品说明与法律文档（隐私政策、用户许可协议、第三方组件说明、技术支持），中英文双语。
+> NASPK 是独立的第三方开发者，为绿联 NAS（UGOS Pro）开发应用。这些应用未上架绿联官方应用商店，由开发者自行分发；安装前需先为设备取得绿联开发者授权，再通过应用中心手动侧载 .upk 安装包。站点提供每款应用的产品说明与法律文档（隐私政策、用户许可协议、第三方组件说明、技术支持），中英文双语。
 >
-> NASPK is an independent developer building apps for UGREEN NAS (UGOS Pro): ten cloud drive tools plus domain and network management apps. Each app has a product page and legal docs (privacy, terms, third-party notices, support) in Chinese and English.
+> NASPK is an independent third-party developer building apps for UGREEN NAS (UGOS Pro). These apps are not listed in the official UGREEN App Center and are self-distributed; installation requires developer authorization and a manual .upk side-load. Each app has a product page and legal docs (privacy, terms, third-party notices, support) in Chinese and English.
 
 ## 应用 / Apps
 

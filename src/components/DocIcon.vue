@@ -1,6 +1,17 @@
 <script setup lang="ts">
 defineProps<{
-  name: 'shield' | 'file' | 'package' | 'life' | 'globe' | 'arrow' | 'check' | 'sun' | 'moon' | 'auto'
+  name:
+    | 'shield'
+    | 'file'
+    | 'package'
+    | 'life'
+    | 'globe'
+    | 'arrow'
+    | 'download'
+    | 'check'
+    | 'sun'
+    | 'moon'
+    | 'auto'
 }>()
 </script>
 
@@ -29,6 +40,10 @@ defineProps<{
     </template>
     <template v-else-if="name === 'arrow'">
       <path d="M5 12h14M13 6l6 6-6 6" />
+    </template>
+    <template v-else-if="name === 'download'">
+      <path d="M12 3v11M7.5 10.5L12 15l4.5-4.5" />
+      <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
     </template>
     <template v-else-if="name === 'sun'">
       <circle cx="12" cy="12" r="4" />

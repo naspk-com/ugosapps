@@ -144,13 +144,17 @@ const resetFilters = (): void => {
           {{ t('home.title') }}
           <span class="gradient-text">{{ t('home.accent') }}</span>
         </h1>
+        <p class="hero-kicker">
+          <span class="hero-kicker-dot" aria-hidden="true" />
+          {{ t('home.notice.kicker') }}
+        </p>
         <p class="hero-lead">{{ t('home.lead') }}</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#apps">
+          <a class="btn btn-primary" href="#install">
             {{ t('home.primary') }}
             <DocIcon name="arrow" />
           </a>
-          <a class="btn btn-ghost" href="#product">{{ t('home.secondary') }}</a>
+          <a class="btn btn-ghost" href="#apps">{{ t('home.secondary') }}</a>
         </div>
         <div class="stat-strip">
           <div class="stat">
@@ -384,9 +388,11 @@ const resetFilters = (): void => {
           v-for="(step, index) in steps"
           :key="step.num"
           class="step"
+          :class="{ 'is-prereq': index === 0 }"
           data-reveal
           :style="{ '--reveal-delay': `${index * 70}ms` }"
         >
+          <span v-if="index === 0" class="step-flag">{{ t('home.stepsPrereq') }}</span>
           <span class="step-num">{{ step.num }}</span>
           <h3>{{ step.title }}</h3>
           <p>{{ step.desc }}</p>
